@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Urbanist&display=swap');
+
+/* header elements */
+header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    min-width: 250px;
+    padding: 0 5px;
+    height: 50px;
+    border-bottom: var(--header-border-bottom);
+}
+
+header div {
+    margin: 0 5px;
+}
+
+#help {
+    background: var(--help-button);
+    width: 24px;
+    height: 24px;
+    transition: 150ms ease-in;
+    cursor: pointer;
+}
+
+#title {
+    font-family: Urbanist;
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--font-color);
+    transition: 150ms ease-in;
+    margin-left: 35px;
+}
+
+#menu-right {
+    display: flex;
+}
+
+#stats {
+    background: var(--stats-button);
+    width: 24px;
+    height: 24px;
+    transition: 150ms ease-in;
+    cursor: pointer;
+}
+
+#settings {
+    background: var(--settings-button);
+    width: 24px;
+    height: 24px;
+    transition: 150ms ease-in;
+    cursor: pointer;
+}
+
+.msg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Urbanist;
+    
+    opacity: 0;
+    transform: translateY(30px);
+    transition: 150ms ease;
+
+    min-width: 100px;
+    width: max-content;
+    max-width: 300px;
+    min-height: 25px;
+    height: min-content;
+
+    background-color: var(--msg-bkg-color);
+    color: var(--font-color);
+    border-radius: 15px;
+
+    margin: 20px 0 0 0;
+    padding: 10px;
+}

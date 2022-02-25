@@ -31,20 +31,20 @@ def updateWordAndTS(word, lang, info):
 
 def getWordleWord(lang):
     with open(CURDIR + '\\wordle.info.json', 'r') as f:
-        info = json.load(f)
+        info:dict = json.load(f)
     
-        if info[f'{lang}_word'] == '':
+        if len(info) != len(SUPPORTED_LANGUAGES)*2 and (info.get(f'{lang}_word') == '' or not info.get(f'{lang}_word')):
             word = getRandomWord(lang)
             updateWordAndTS(word, lang, info)
-            
+
             return word # pick random word because there is no word and update json file (word, ts) as well
         elif int(info[f'{lang}_nextWordTS']) < datetime.now().timestamp():
             word = getRandomWord(lang) # pick random word because the next word is due
             updateWordAndTS(word, lang, info)
 
-            return word # pick random word because the next word is due and update for next TS as well
+            return word # pick random word because the next word is due and update next TS as well
 
-        return info[f'{lang}_word']
+        return info[f'{lang}_word'], info[f'{lang}_nextWordTS']
 
 # Routing
 @main_router.route('/')
@@ -65,6 +65,29 @@ def get_word():
         <h3 style="font-weight: normal">Language not supported</h3>
         ''', 400 # bad request code?
     else:
+        (word, nextWordTS) = getWordleWord(lang)
         return jsonify({
-            'word': getWordleWord(lang)
+            'word': word,
+            'nextWordTS': nextWordTS
         })
+
+@main_router.route('/validate_word')
+def check_word():
+    word = request.args.get('word')
+    lang = request.args.get('lang')
+    if not word or not lang:
+        return '''
+        <h1>Bad Request</h1>
+        <h3 style="font-weight: normal">Word or Language not specified</h3>
+        ''', 400
+    elif lang not in SUPPORTED_LANGUAGES:
+        return '''
+        <h1>Bad Request</h1>
+        <h3 style="font-weight: normal">Language not supported</h3>
+        ''', 400
+    else:
+        with open(WORDSDIR + f'\\{lang}\\words_{lang}.txt', 'r') as f:
+            if word.strip().upper() + '\n' in f:
+                return jsonify(True)
+            else:
+                return jsonify(False)
