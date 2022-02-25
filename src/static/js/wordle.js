@@ -106,7 +106,6 @@
             if (!e) eval[i] = 'absent'
         })
 
-        console.log(arr_word, arr_guess)
         return eval
     }
 
