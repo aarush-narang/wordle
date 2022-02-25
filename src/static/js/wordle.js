@@ -72,22 +72,41 @@
     }
 
     function evaluateGuess(guess, word) {
-        // TODO: if they input 2+ of one letter and there is only 1+ of that letter in the word, only yellow the first one
-        // ex: word: MUSIT, guess: MESSY, only one S (the green one in the correct position) should be shown, the other S should be grey because there is only one S
         const arr_guess = guess.split('')
         const arr_word = word.split('')
-        const eval = []
+        const eval = [null, null, null, null, null]
 
         arr_guess.forEach((letter, i) => {
             if (letter === arr_word[i]) { // check for exact positions
-                eval.push('correct')
-            } else if (arr_word.includes(letter)) { // check if the letter is in the word
-                eval.push('present')
-            } else { // if neither
-                eval.push('absent')
+                eval[i] = 'correct'
+                arr_word[i] = '_'
             }
         })
 
+        const arr_guess_set = Array.from(new Set(arr_guess))
+        arr_guess_set.forEach((letter, i) => {
+            if (arr_word.includes(letter)) { // check if the letter is in the word
+                while (arr_word.indexOf(letter) !== -1){ // if it is, 
+                    const index = arr_guess.indexOf(letter) // find the first occurence of the letter and 
+                    if (!eval[index]) {
+                        eval[index] = 'present' // mark it as present.
+                    }
+                    arr_word[arr_word.indexOf(letter)] = '_' // then remove that occurence from the word 
+                    arr_guess[arr_guess.indexOf(letter)] = '_' // and the guess
+                } // and keep checking until it's gone
+            } else { // if neither present nor correct
+                const index = arr_guess.indexOf(letter)
+                if (!eval[index]) {
+                    eval[index] = 'absent' // mark as absent
+                }
+            }
+        })
+
+        eval.forEach((e, i) => {
+            if (!e) eval[i] = 'absent'
+        })
+
+        console.log(arr_word, arr_guess)
         return eval
     }
 
