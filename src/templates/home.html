@@ -7,12 +7,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheets/themes.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheets/wordle.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheets/keyboard.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheets/tiles.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheets/modals.css') }}">
     <script type="text/javascript" src="{{ url_for('static', filename='js/theme.js') }}" defer></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/wordle.js') }}" defer></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/modals.js') }}" defer></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/keyboard.js') }}" defer></script>
     <title>Wordle</title>
+    <meta content="Wordle" property="og:title" />
+    <meta content="Wordle with more word themes" property="og:description" />
+    <!-- <meta content="https://embed.com/this-is-the-site-url" property="og:url" /> -->
+    <!-- <meta content="https://embed.com/embedimage.png" property="og:image" /> -->
+    <!-- <meta content="#43B581" data-react-helmet="true" name="theme-color" /> -->
 </head>
 
 <body>
@@ -26,11 +33,7 @@
                 <!-- stats on how many guesses they took for each wordle, seperated by language 
                 (# of wordles played, win %, win streak, max streak, guess dist.,) (MODAL) -->
             </div>
-            <div id="settings">
-
-
-            </div>
-
+            <div id="settings"></div>
         </div>
     </header>
     <div id="modals">
@@ -288,10 +291,59 @@
                 </div>
             </game-row>
         </div>
+        <div id="keyboard-container">
+            <div id="keyboard">
+                <div class="k-row">
+                    <button data-key="q">q</button>
+                    <button data-key="w">w</button>
+                    <button data-key="e">e</button>
+                    <button data-key="r">r</button>
+                    <button data-key="t">t</button>
+                    <button data-key="y">y</button>
+                    <button data-key="u">u</button>
+                    <button data-key="i">i</button>
+                    <button data-key="o">o</button>
+                    <button data-key="p">p</button>
+                </div>
+                <div class="k-row">
+                    <div class="spacer half"></div>
+                    <button data-key="a">a</button>
+                    <button data-key="s">s</button>
+                    <button data-key="d">d</button>
+                    <button data-key="f">f</button>
+                    <button data-key="g">g</button>
+                    <button data-key="h">h</button>
+                    <button data-key="j">j</button>
+                    <button data-key="k">k</button>
+                    <button data-key="l">l</button>
+                    <div class="spacer half"></div>
+                </div>
+                <div class="k-row">
+                    <button data-key="Enter" class="one-and-a-half">enter</button>
+                    <button data-key="z">z</button>
+                    <button data-key="x">x</button>
+                    <button data-key="c">c</button>
+                    <button data-key="v">v</button>
+                    <button data-key="b">b</button>
+                    <button data-key="n">n</button>
+                    <button data-key="m">m</button>
+                    <button data-key="Backspace" class="one-and-a-half">
+                        <div id="backspace"></div>
+                    </button>
+                </div>
+                <div class="k-row accents">
+                    <button data-key="á">á</button>
+                    <button data-key="é">é</button>
+                    <button data-key="í">í</button>
+                    <button data-key="ó">ó</button>
+                    <button data-key="ú">ú</button>
+                    <button data-key="ñ">ñ</button>
+                </div>
+            </div>
+
+        </div>
     </div>
-    <div id="keyboard">
-        <!-- keyboard section including all accents -->
-    </div>
+
 
 </body>
 

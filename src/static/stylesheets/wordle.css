@@ -58,7 +58,7 @@ header div {
     cursor: pointer;
 }
 
-.msg {
+#msg {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -78,7 +78,7 @@ header div {
     color: var(--font-color);
     border-radius: 15px;
 
-    margin: 20px 0 0 0;
+    margin: 20px 0 15px 0;
     padding: 10px;
     z-index: 1000000;
 }

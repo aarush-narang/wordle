@@ -13,6 +13,10 @@
     --msg-bkg-color: var(--full-modal-bkg-color);
     --tile-text-color: hsl(0, 0%, 100%);
 
+    --keyboard-btn-color: rgb(118, 143, 184);
+    --keyboard-font-color: rgb(0, 0, 0);
+    --backspace-btn: url(../images/backspace-black.png) no-repeat center;
+
     --color-tone-4: #3a3a3c;
     --color-tone-3: #565758;
     --color-tone-7: #121213;
@@ -36,6 +40,10 @@
     --settings-button: url(../images/settings-black.png) no-repeat center;
     --msg-bkg-color: var(--full-modal-bkg-color);
     --tile-text-color: hsl(0, 0%, 100%);
+
+    --keyboard-btn-color: rgb(15, 24, 34);
+    --keyboard-font-color: rgb(255, 255, 255);
+    --backspace-btn: url(../images/backspace-white.png) no-repeat center;
 
     --color-tone-4: #3a3a3c;
     --color-tone-3: #565758;

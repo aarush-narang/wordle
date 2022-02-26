@@ -173,6 +173,7 @@
     border: none;
     
     padding: 5px;
+    margin-left: 15px;
     border-radius: 3px;
     background-color: var(--theme-back-color);
     color: var(--color-tone-7);

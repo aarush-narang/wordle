@@ -53,19 +53,19 @@ def home():
 
 @main_router.route('/get_word')
 def get_word():
-    lang = request.args.get('lang')
-    if not lang:
+    mode = request.args.get('mode')
+    if not mode:
         return '''
         <h1>Bad Request</h1>
         <h3 style="font-weight: normal">Language not specified</h3>
         ''', 400
-    elif lang not in SUPPORTED_LANGUAGES:
+    elif mode not in SUPPORTED_LANGUAGES:
         return '''
         <h1>Bad Request</h1>
         <h3 style="font-weight: normal">Language not supported</h3>
         ''', 400 # bad request code?
     else:
-        (word, nextWordTS) = getWordleWord(lang)
+        (word, nextWordTS, *args) = getWordleWord(mode)
         return jsonify({
             'word': word,
             'nextWordTS': nextWordTS
@@ -74,19 +74,19 @@ def get_word():
 @main_router.route('/validate_word')
 def check_word():
     word = request.args.get('word')
-    lang = request.args.get('lang')
-    if not word or not lang:
+    mode = request.args.get('lang')
+    if not word or not mode:
         return '''
         <h1>Bad Request</h1>
         <h3 style="font-weight: normal">Word or Language not specified</h3>
         ''', 400
-    elif lang not in SUPPORTED_LANGUAGES:
+    elif mode not in SUPPORTED_LANGUAGES:
         return '''
         <h1>Bad Request</h1>
         <h3 style="font-weight: normal">Language not supported</h3>
         ''', 400
     else:
-        with open(WORDSDIR + f'\\{lang}\\words_{lang}.txt', 'r') as f:
+        with open(WORDSDIR + f'\\{mode}\\words_{mode}.txt', 'r') as f:
             if word.strip().upper() + '\n' in f:
                 return jsonify(True)
             else:

@@ -24,14 +24,12 @@
             }, 250);
         }, 250);
     }
-
     function popTile(tile) {
         tile.setAttribute('data-animation', 'pop')
         setTimeout(() => {
             tile.setAttribute('data-animation', 'idle')
         }, 100);
     }
-
     function shakeRow(gameRow) {
         gameRow.setAttribute('invalid', '')
         setTimeout(() => {
@@ -41,22 +39,26 @@
 
     function displayMsg(message = 'Error', time = 5000, color = 'var(--full-modal-bkg-color)') {
         const msg = document.getElementById('msg')
-        if (msg.querySelectorAll('.msg').length === 1) {
-            msg.removeChild(msg.querySelector('.msg'))
-        }
-        const newMsg = document.createElement('div')
 
-        newMsg.classList.add('msg')
-        msg.appendChild(newMsg)
-        newMsg.style.backgroundColor = color
-        newMsg.innerText = message
+        if (msg.style.transform === 'translateY(-100%)') {
+            msg.style.transform = 'translateY(30px)'
+        }
         setTimeout(() => {
-            newMsg.style.opacity = 1
-            newMsg.style.transform = 'translateY(0)'
+            msg.style.backgroundColor = color
+            msg.innerHTML = message
+            msg.style.opacity = 1
+            msg.style.transform = 'translateY(0)'
+
+            setTimeout(() => {
+                msg.style.opacity = 0
+                msg.style.transform = 'translateY(-100%)'
+                msg.innerHTML = ''
+                msg.style.backgroundColor = ''
+            }, time)
+            setTimeout(() => {
+                msg.style.transform = 'translateY(30px)'
+            }, time + 15);
         }, 100);
-        setTimeout(() => {
-            newMsg.remove()
-        }, time)
     }
 
     function evaluateGuess(guess, word) {
@@ -96,12 +98,57 @@
 
         return eval
     }
+    function getMarkedLetters(boardState) {
+        let correct = []
+        let present = []
+        let absent = []
+        const board = boardState.boardState // array of strings
+        const evals = boardState.evaluations // array of arrays of evaluation results
+        board.forEach((word, i) => {
+            const eval = evals[i]
+            word.split('').forEach((letter, j) => {
+                if (eval[j] === 'correct') correct.push(letter)
+                if (eval[j] === 'present') present.push(letter)
+                if (eval[j] === 'absent') absent.push(letter)
+            })
+        })
+        // remove duplicates
+        correct = Array.from(new Set(correct))
+        present = Array.from(new Set(present))
+        absent = Array.from(new Set(absent))
+
+        return {
+            correct,
+            present,
+            absent
+        }
+    }
+
+    function updateKeyboard() {
+        keys.forEach(key => {
+            if (markedLetters.correct.includes(key.innerText.toLowerCase())) {
+                key.setAttribute('data-state', 'correct')
+            } else if (markedLetters.present.includes(key.innerText.toLowerCase())) {
+                key.setAttribute('data-state', 'present')
+            } else if (markedLetters.absent.includes(key.innerText.toLowerCase())) {
+                key.setAttribute('data-state', 'absent')
+            }
+        })
+    }
+
 
     /* Wordle Game */
     const mode = window.localStorage.getItem('mode') || 'en'
-    const word = await fetch('/get_word?lang=' + mode).then(res => res.json()); // fetch word for the specific language
+    let word
+    try {
+        word = await fetch('/get_word?mode=' + mode).then(res => res.json()); // fetch word for the specific language
+    } catch (e) {
+        window.localStorage.setItem('mode', 'en') // if there's an error in fetching the word from the selected mode, set the language to english
+        return window.location.reload()
+    }
+
     const gameRows = document.querySelectorAll('game-row')
-    // TODO: check if the mode is valid from the word response
+
     if (!window.localStorage.getItem(mode + '_boardState')) { // if there is no board state, create a new board
         window.localStorage.setItem(mode + '_boardState', JSON.stringify({
             "boardState": ["", "", "", "", "", ""],
@@ -128,6 +175,11 @@
         return window.location.reload()
     }
 
+    const keyboard = document.getElementById('keyboard')
+    const keys = keyboard.querySelectorAll('button')
+    let markedLetters = getMarkedLetters(boardState)
+    let hardModeLetters = markedLetters.correct.concat(markedLetters.present)
+
     // load the board state into the game using the words stored and the evaluations
     boardState.boardState.forEach((word, i) => {
         if (word === '') return
@@ -146,16 +198,23 @@
         })
     })
 
+    updateKeyboard() // update the keyboard colors
+
     document.addEventListener('keydown', async (event) => {
         boardState = JSON.parse(window.localStorage.getItem(mode + '_boardState')) // on every keypress, get the board state to make sure it is not stale data
-        if (boardState.state === 'COMPLETED') return
+        if (boardState.state === 'WIN') return displayMsg('You Won! The word was ' + word.word, 1000000, 'var(--full-modal-bkg-color)')
+        else if (boardState.state === 'LOSE') return displayMsg('You Lost :(, The word was ' + word.word, 1000000, 'var(--full-modal-bkg-color)')
+
+        if ((event.key.length > 1 || !/^([A-Z]|\á|\é|\í|\ó|\ú|\ñ)$/i.test(event.key)) && event.key !== 'Backspace' && event.key !== 'Enter') return // check if input is valid
+
+        markedLetters = getMarkedLetters(boardState)
+        hardModeLetters = markedLetters.correct.concat(markedLetters.present)
 
         const rowIndex = boardState.rowIndex // get the word row they are on
         const gameRow = gameRows[rowIndex] // and get the row element from the index
         const gameTiles = gameRow.querySelectorAll('game-tile')
         const tiles = gameRow.querySelectorAll('.tile') // get all tiles from the row
 
-        if ((event.key.length > 1 || !/^[A-Z]$/i.test(event.key)) && event.key !== 'Backspace' && event.key !== 'Enter') return // check if input is valid
         let currentLetters = gameRow.getAttribute('letters') // the letters that are currently in the row
 
         if (event.key === 'Backspace') { // if backspace is pressed, remove the last letter in the last tile
@@ -176,7 +235,21 @@
                 shakeRow(gameRow)
                 return displayMsg('Word already used', 2000, 'var(--full-modal-bkg-color)')
             } else {
-                const valid = await fetch(`/validate_word?lang=${mode}&word=${currentLetters}`).then(res => res.json()); // if the word exists
+                // hard mode checks
+                if(boardState.hardMode) {
+                    let pass = [true, null]
+                    hardModeLetters.forEach((letter, i, arr) => {
+                        if (!currentLetters.split('').includes(letter)) {
+                            pass = [false, arr[i]]
+                        }
+                    })
+                    if(!pass[0]) {
+                        displayMsg(`You must use <b style="margin: 0 5px">${pass[1].toUpperCase()}</b> in your guess`, 5000, 'var(--full-modal-bkg-color)')
+                        return shakeRow(gameRow)
+                    }
+                }
+                // check if the word exists
+                const valid = await fetch(`/validate_word?lang=${mode}&word=${currentLetters}`).then(res => res.json());
                 if (!valid) {
                     displayMsg('Invalid word', 2000, 'var(--full-modal-bkg-color)')
                     return shakeRow(gameRow)
@@ -188,15 +261,23 @@
                     boardState.rowIndex = rowIndex + 1
                     window.localStorage.setItem(mode + '_boardState', JSON.stringify(boardState))
 
-                    eval.forEach((evaluation, i) => { // update the tiles and animate them
+                    // update the tiles and animate them
+                    eval.forEach((evaluation, i) => { 
                         setTimeout(() => {
                             tiles[i].setAttribute('data-state', evaluation)
                             flipTile(tiles[i])
                         }, 100 + (i * 200));
                     })
+
+                    // update keyboard colors
+                    markedLetters = getMarkedLetters(boardState)
+                    setTimeout(() => {
+                        updateKeyboard()
+                    }, 300 + (eval.length * 200));
+
                     // WIN
                     if (!eval.find(e => e === 'absent') && !eval.find(e => e === 'present')) { // there are only "correct" evaluations
-                        boardState.state = 'COMPLETED'
+                        boardState.state = 'WIN'
                         window.localStorage.setItem(mode + '_boardState', JSON.stringify(boardState))
 
                         eval.forEach((evaluation, i) => { // update the tiles and animate them
@@ -215,10 +296,10 @@
                     }
                     // LOSE
                     if (boardState.rowIndex === 6) {
-                        boardState.state = 'COMPLETED'
+                        boardState.state = 'LOSE'
                         window.localStorage.setItem(mode + '_boardState', JSON.stringify(boardState))
                         setTimeout(() => {
-                            displayMsg('You Lost :(', 10000, 'var(--full-modal-bkg-color)')
+                            displayMsg('You Lost :(, the word was ' + word.word, 1000000, 'var(--full-modal-bkg-color)')
                         }, 200 + (eval.length * 200));
                         return
                     }
