@@ -6,7 +6,9 @@
     align-items: center;
     position: relative;
 }
-#modal-close {
+
+/* general modal classes */
+.modal-close {
     display: flex;
     background: var(--modal-close);
     width: 24px;
@@ -15,21 +17,23 @@
     cursor: pointer;
 }
 
-#help-modal {
-    display: flex;
+.modal {
+    display: none;
     position: absolute;
     flex-direction: column;
     pointer-events: none;
     user-select: none;
 
     top: 0;
-    min-width: 250px;
-    width: fit-content;
+
+    min-width: 260px;
+    width: calc(100vw - 30px);
+
     min-height: calc(100vh - 140px);
 
     background-color: var(--full-modal-bkg-color);
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(20px);
 
     transition: transform 100ms ease,
         height 120ms ease,
@@ -41,18 +45,18 @@
     z-index: -2;
 }
 
-#help-modal.open {
+.modal.open {
     pointer-events: all;
     user-select: auto;
     opacity: 1;
     transform: translateY(0);
-    
-    min-height: calc(100vh - 82px);
+
+    min-height: calc(100vh - 81px);
     height: min-content;
     z-index: 2;
 }
 
-#help-modal-header {
+.modal-header {
     display: flex;
     justify-content: space-between;
 
@@ -63,7 +67,11 @@
     margin-bottom: 40px;
 }
 
-#help-modal-content {
+.modal-title {
+    margin-left: 25px;
+}
+
+.modal-content {
     display: flex;
     position: relative;
     flex-direction: column;
@@ -73,6 +81,7 @@
     font-size: 17px;
 }
 
+/* help examples */
 #help-modal-content>p {
     margin: 10px 0;
 }
@@ -85,10 +94,86 @@
     border-bottom: var(--header-border-bottom);
 }
 
-/* examples */
 .example {
     display: inline-flex;
     flex-direction: column;
     margin-top: 24px;
     margin-bottom: 0px;
+}
+
+@media screen and (max-width: 800px) {
+    .modal-content {
+        margin: 0 20px;
+    }
+}
+
+/* toggle switch styles */
+.setting-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: var(--header-border-bottom);
+    margin-top: 20px;
+}
+
+.setting-label h6,
+.setting-label h5 {
+    font-weight: 100;
+    margin: 10px 0 15px 0;
+}
+
+.switch {
+    display: inline-flex;
+    align-items: center;
+    font-size: 20px;
+
+    min-height: 20px;
+    min-width: 40px;
+    background: var(--theme-back-color);
+    border-radius: 10px;
+
+    transition: 300ms ease;
+
+    margin-left: 15px;
+}
+
+.switch input {
+    position: absolute;
+    opacity: 0;
+    min-width: 35px;
+    z-index: 1;
+}
+
+.switch input[disabled] {
+    cursor: not-allowed;
+}
+
+.switch div {
+    margin: 0px 1px 0px 1px;
+    min-height: 18px;
+    min-width: 18px;
+    border-radius: 100%;
+    box-shadow: 0 0.1em 0.3em rgba(0, 0, 0, 0.3);
+    transition: all 300ms cubic-bezier(0.6, 0.09, 0.27, 0.96);
+    background: var(--theme-switch-color);
+    z-index: 0;
+}
+
+.switch input:checked+div {
+    transform: translateX(20px);
+    background: var(--theme-switch-color);
+}
+
+#modes-select {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    outline: none;
+    border: none;
+    
+    padding: 5px;
+    border-radius: 3px;
+    background-color: var(--theme-back-color);
+    color: var(--color-tone-7);
 }

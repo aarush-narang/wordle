@@ -1,5 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Urbanist&display=swap');
-
+body {
+    background-color: var(--primary-color);
+    color: var(--font-color);
+    transition: 150ms ease-in;
+    margin: 0;
+}
 /* header elements */
 header {
     display: flex;
@@ -31,7 +35,7 @@ header div {
     font-weight: bold;
     color: var(--font-color);
     transition: 150ms ease-in;
-    margin-left: 35px;
+    margin-left: 40px;
 }
 
 #menu-right {
@@ -76,4 +80,5 @@ header div {
 
     margin: 20px 0 0 0;
     padding: 10px;
+    z-index: 1000000;
 }

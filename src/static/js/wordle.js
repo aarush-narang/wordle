@@ -7,25 +7,13 @@
         ['Nice!', 'Great!'],
         ['Phew!', 'Close one!']
     ]).set('es', [
-        [],
-        [],
-        [],
-        [],
-        [],
-        [] // TODO: add complements for Spanish
+        ['¡Increíble!', '¡Impresionante!'],
+        ['¡Espectacular', '¡Magnífico!', '¡Asombroso!'],
+        ['¡Extraordinario!', '¡Impresionante!'],
+        ['¡Buen trabajo!', '¡Excelente!'],
+        ['¡Genial!', '¡Excelente!'],
+        ['¡Uf!', '¡Cierra uno!']
     ])
-
-    const modalClose = document.getElementById('modal-close');
-    const statsModal = document.getElementById('stats-modal');
-    // const helpModal = document.getElementById('help-modal');
-    const settingsModal = document.getElementById('settings-modal')
-
-    // implement stats button modal and settings modal
-    const statsBtn = document.getElementById('stats')
-
-    const helpBtn = document.getElementById('help')
-    // const helpExamples = document.getElementById('help-examples');
-    // const exampleTiles = helpExamples.querySelectorAll('.tile')
 
     function flipTile(tile) {
         tile.setAttribute('data-animation', 'flip-in')
@@ -86,7 +74,7 @@
         const arr_guess_set = Array.from(new Set(arr_guess))
         arr_guess_set.forEach((letter, i) => {
             if (arr_word.includes(letter)) { // check if the letter is in the word
-                while (arr_word.indexOf(letter) !== -1){ // if it is, 
+                while (arr_word.indexOf(letter) !== -1) { // if it is, 
                     const index = arr_guess.indexOf(letter) // find the first occurence of the letter and 
                     if (!eval[index]) {
                         eval[index] = 'present' // mark it as present.
@@ -109,34 +97,13 @@
         return eval
     }
 
-    helpBtn.addEventListener('click', () => {
-        if (helpModal.classList.contains('open')) {
-            helpModal.classList.remove('open')
-        } else {
-            helpModal.classList.add('open')
-            exampleTiles.forEach(tile => {
-                if (tile.getAttribute('data-state') !== 'tbd') {
-                    flipTile(tile)
-                }
-            })
-        }
-    })
-    // modalClose.addEventListener('click', () => {
-    //     helpModal.classList.remove('open');
-    //     setTimeout(() => {
-    //         helpModal.style.display = 'none'
-    //     }, 300);
-
-    //     settingsModal.classList.remove('open');
-    //     statsModal.classList.remove('open');
-    // })
-
     /* Wordle Game */
-    const word = await fetch('/get_word?lang=en').then(res => res.json()); // fetch word for the specific language
+    const mode = window.localStorage.getItem('mode') || 'en'
+    const word = await fetch('/get_word?lang=' + mode).then(res => res.json()); // fetch word for the specific language
     const gameRows = document.querySelectorAll('game-row')
-
-    if (!window.localStorage.getItem('boardState')) { // if there is no board state, create a new board
-        window.localStorage.setItem('boardState', JSON.stringify({
+    // TODO: check if the mode is valid from the word response
+    if (!window.localStorage.getItem(mode + '_boardState')) { // if there is no board state, create a new board
+        window.localStorage.setItem(mode + '_boardState', JSON.stringify({
             "boardState": ["", "", "", "", "", ""],
             "evaluations": [null, null, null, null, null, null],
             "rowIndex": 0,
@@ -145,12 +112,12 @@
             'state': 'IN_PROGRESS'
         }))
     }
-    let boardState = JSON.parse(window.localStorage.getItem('boardState')) // get the board state
+    let boardState = JSON.parse(window.localStorage.getItem(mode + '_boardState')) // get the board state
 
     // check if it is a new day using the nextWordTS in localstorage
     if (boardState.nextWordTS !== word.nextWordTS) {
         // reset board state if it is not equal to the nextWordTS that was just fetched
-        window.localStorage.setItem('boardState', JSON.stringify({
+        window.localStorage.setItem(mode + '_boardState', JSON.stringify({
             "boardState": ["", "", "", "", "", ""],
             "evaluations": [null, null, null, null, null, null],
             "rowIndex": 0,
@@ -180,7 +147,7 @@
     })
 
     document.addEventListener('keydown', async (event) => {
-        boardState = JSON.parse(window.localStorage.getItem('boardState')) // on every keypress, get the board state to make sure it is not stale data
+        boardState = JSON.parse(window.localStorage.getItem(mode + '_boardState')) // on every keypress, get the board state to make sure it is not stale data
         if (boardState.state === 'COMPLETED') return
 
         const rowIndex = boardState.rowIndex // get the word row they are on
@@ -209,28 +176,28 @@
                 shakeRow(gameRow)
                 return displayMsg('Word already used', 2000, 'var(--full-modal-bkg-color)')
             } else {
-                const valid = await fetch('/validate_word?lang=en&word=' + currentLetters).then(res => res.json()); // if the word exists
+                const valid = await fetch(`/validate_word?lang=${mode}&word=${currentLetters}`).then(res => res.json()); // if the word exists
                 if (!valid) {
                     displayMsg('Invalid word', 2000, 'var(--full-modal-bkg-color)')
-                    shakeRow(gameRow)
+                    return shakeRow(gameRow)
                 } else {
                     const eval = evaluateGuess(currentLetters.toLowerCase(), word.word.toLowerCase()) // evaluate the guess
                     // push eval to board state and tiles, update boardstate words, and row index
                     boardState.boardState[rowIndex] = currentLetters
                     boardState.evaluations[rowIndex] = eval
                     boardState.rowIndex = rowIndex + 1
-                    window.localStorage.setItem('boardState', JSON.stringify(boardState))
+                    window.localStorage.setItem(mode + '_boardState', JSON.stringify(boardState))
 
                     eval.forEach((evaluation, i) => { // update the tiles and animate them
                         setTimeout(() => {
                             tiles[i].setAttribute('data-state', evaluation)
                             flipTile(tiles[i])
-                        }, 100 + i * 200);
+                        }, 100 + (i * 200));
                     })
                     // WIN
                     if (!eval.find(e => e === 'absent') && !eval.find(e => e === 'present')) { // there are only "correct" evaluations
                         boardState.state = 'COMPLETED'
-                        window.localStorage.setItem('boardState', JSON.stringify(boardState))
+                        window.localStorage.setItem(mode + '_boardState', JSON.stringify(boardState))
 
                         eval.forEach((evaluation, i) => { // update the tiles and animate them
                             setTimeout(() => {
@@ -240,7 +207,7 @@
                         })
 
                         setTimeout(() => { // get random message from the map
-                            const randomMsg = MESSAGES.get('en')[rowIndex][(Math.round(Math.random() * (MESSAGES.get('en')[rowIndex].length - 1)))]
+                            const randomMsg = MESSAGES.get(mode)[rowIndex][(Math.round(Math.random() * (MESSAGES.get('en')[rowIndex].length - 1)))]
                             displayMsg(randomMsg, 10000, 'var(--full-modal-bkg-color)')
                         }, 500 + (eval.length * 200))
                         return
@@ -249,7 +216,7 @@
                     // LOSE
                     if (boardState.rowIndex === 6) {
                         boardState.state = 'COMPLETED'
-                        window.localStorage.setItem('boardState', JSON.stringify(boardState))
+                        window.localStorage.setItem(mode + '_boardState', JSON.stringify(boardState))
                         setTimeout(() => {
                             displayMsg('You Lost :(', 10000, 'var(--full-modal-bkg-color)')
                         }, 200 + (eval.length * 200));

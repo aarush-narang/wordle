@@ -11,6 +11,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheets/modals.css') }}">
     <script type="text/javascript" src="{{ url_for('static', filename='js/theme.js') }}" defer></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/wordle.js') }}" defer></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/modals.js') }}" defer></script>
     <title>Wordle</title>
 </head>
 
@@ -26,31 +27,27 @@
                 (# of wordles played, win %, win streak, max streak, guess dist.,) (MODAL) -->
             </div>
             <div id="settings">
-                <!-- settings where you can do: hard mode, dark/light mode theme, and more? (MODAL) -->
 
-                
+
             </div>
-            <!-- put theme switch in settings modal -->
-            <label id="theme-switch">
-                <input id='checkbox' type="checkbox">
-                <div></div>
-            </label>
+
         </div>
     </header>
-    <!-- <div id="modals">
-        <div id="help-modal">
-            <div id="help-modal-header">
+    <div id="modals">
+        <div id="help-modal" class="modal">
+            <div id="help-modal-header" class="modal-header">
                 <div></div>
-                <div id="help-modal-title">How To Play</div>
-                <div id="modal-close"></div>
+                <div id="help-modal-title" class="modal-title">How To Play</div>
+                <div class="modal-close"></div>
             </div>
-            <div id="help-modal-content">
-                <p>You have <strong>6 (six)</strong> tries to guess the WORDLE</p>
-                <p>Each guess must be a valid <strong>five-letter</strong> word. Hit the enter button or enter key to
+            <div id="help-modal-content" class="modal-content">
+                <p>You have <b>6 (six)</b> tries to guess the WORDLE</p>
+                <p>Each guess must be a valid <b>five-letter</b> word. Hit the enter button or enter key to
                     submit.</p>
                 <p>After you make a guess, the color of the tiles of your guess will change to indicate how close (or
                     not
                     close) your guess was from the word.</p>
+
                 <br />
                 <div id="help-examples">
                     <h3>Examples:</h3>
@@ -72,7 +69,7 @@
                                 <div class="tile" data-state="tbd" data-animation="idle">y</div>
                             </game-tile>
                         </div>
-                        <p>The letter <strong>W</strong> is in the word and in the correct spot.</p>
+                        <p>The letter <b>W</b> is in the word and in the correct spot.</p>
                     </div>
                     <div class="example">
                         <div class="row">
@@ -92,7 +89,7 @@
                                 <div class="tile" data-state="tbd" data-animation="idle">s</div>
                             </game-tile>
                         </div>
-                        <p>The letter <strong>I</strong> is in the word, but is not in the correct spot.</p>
+                        <p>The letter <b>I</b> is in the word, but is not in the correct spot.</p>
                     </div>
                     <div class="example">
                         <div class="row">
@@ -112,133 +109,185 @@
                                 <div class="tile" data-state="tbd" data-animation="idle">e</div>
                             </game-tile>
                         </div>
-                        <p>The letter <strong>U</strong> is not in the word.</p>
+                        <p>The letter <b>U</b> is not in the word.</p>
                     </div>
                 </div>
             </div>
         </div>
-        <div id="settings-modal"></div>
+        <div id="settings-modal" class="modal">
+            <div id="settings-modal-header" class="modal-header">
+                <div></div>
+                <div id="settings-modal-title" class="modal-title">Settings</div>
+                <div class="modal-close"></div>
+            </div>
+            <div id="settings-modal-content" class="modal-content">
+
+                <div id="hard-mode-switch-container" class="setting-container">
+                    <div class="setting-label">
+                        <label>Hard Mode</label>
+                        <h5>Any revealed hints must be used in subsequent guesses</h5>
+                        <h6 style="color: rgb(238, 129, 129);">Can only be toggled <b>before</b> starting</h6>
+                    </div>
+                    <div id="hard-mode-switch" class="switch">
+                        <input id="hard-mode-checkbox" type="checkbox">
+                        <div></div>
+                    </div>
+                </div>
+
+                <div id="theme-switch-container" class="setting-container">
+                    <div class="setting-label">
+                        <label>Theme</label>
+                        <h6>Switch between dark and light mode</h6>
+                    </div>
+                    <div id="theme-switch" class="switch">
+                        <input id='theme-checkbox' type="checkbox">
+                        <div></div>
+                    </div>
+                </div>
+
+                <div id="mode-switch-container" class="setting-container">
+                    <div class="setting-label">
+                        <label>Switch Word Theme</label>
+                        <h6>Switch between different languages or themes of words</h6>
+                    </div>
+                    <div id="mode-switch" class="select">
+                        <select id="modes-select">
+                            <optgroup label="Languages">
+                                <option value="en">English</option>
+                                <option value="es">Spanish</option>
+                            </optgroup>
+                            <optgroup label="Other Modes" disabled>
+                                <option value="foods">Foods</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- settings where you can do: 
+                    select box for what mode they want to play -->
+            </div>
+        </div>
         <div id="stats-modal"></div>
-    </div> -->
+    </div>
 
     <div id="game">
         <div id="msg"></div>
-            <div id="board">
-                <game-row letters="" length="5">
-                    <div class="row">
-                        <game-tile>
-                            <div class="tile" data-state="empty" data-animation="idle"></div>
-                        </game-tile>
-                        <game-tile>
-                            <div class="tile" data-state="empty" data-animation="idle"></div>
-                        </game-tile>
-                        <game-tile>
-                            <div class="tile" data-state="empty" data-animation="idle"></div>
-                        </game-tile>
-                        <game-tile>
-                            <div class="tile" data-state="empty" data-animation="idle"></div>
-                        </game-tile>
-                        <game-tile>
-                            <div class="tile" data-state="empty" data-animation="idle"></div>
-                        </game-tile>
-                    </div>
-                </game-row>
-                <game-row letters="" length="5">
-                    <div class="row">
-                        <game-tile>
-                            <div class="tile" data-state="empty" data-animation="idle"></div>
-                        </game-tile>
-                        <game-tile>
-                            <div class="tile" data-state="empty" data-animation="idle"></div>
-                        </game-tile>
-                        <game-tile>
-                            <div class="tile" data-state="empty" data-animation="idle"></div>
-                        </game-tile>
-                        <game-tile>
-                            <div class="tile" data-state="empty" data-animation="idle"></div>
-                        </game-tile>
-                        <game-tile>
-                            <div class="tile" data-state="empty" data-animation="idle"></div>
-                        </game-tile>
-                    </div>
-                </game-row>
-                <game-row letters="" length="5">
-                    <div class="row">
-                        <game-tile>
-                            <div class="tile" data-state="empty" data-animation="idle"></div>
-                        </game-tile>
-                        <game-tile>
-                            <div class="tile" data-state="empty" data-animation="idle"></div>
-                        </game-tile>
-                        <game-tile>
-                            <div class="tile" data-state="empty" data-animation="idle"></div>
-                        </game-tile>
-                        <game-tile>
-                            <div class="tile" data-state="empty" data-animation="idle"></div>
-                        </game-tile>
-                        <game-tile>
-                            <div class="tile" data-state="empty" data-animation="idle"></div>
-                        </game-tile>
-                    </div>
-                </game-row>
-                <game-row letters="" length="5">
-                    <div class="row">
-                        <game-tile>
-                            <div class="tile" data-state="empty" data-animation="idle"></div>
-                        </game-tile>
-                        <game-tile>
-                            <div class="tile" data-state="empty" data-animation="idle"></div>
-                        </game-tile>
-                        <game-tile>
-                            <div class="tile" data-state="empty" data-animation="idle"></div>
-                        </game-tile>
-                        <game-tile>
-                            <div class="tile" data-state="empty" data-animation="idle"></div>
-                        </game-tile>
-                        <game-tile>
-                            <div class="tile" data-state="empty" data-animation="idle"></div>
-                        </game-tile>
-                    </div>
-                </game-row>
-                <game-row letters="" length="5">
-                    <div class="row">
-                        <game-tile>
-                            <div class="tile" data-state="empty" data-animation="idle"></div>
-                        </game-tile>
-                        <game-tile>
-                            <div class="tile" data-state="empty" data-animation="idle"></div>
-                        </game-tile>
-                        <game-tile>
-                            <div class="tile" data-state="empty" data-animation="idle"></div>
-                        </game-tile>
-                        <game-tile>
-                            <div class="tile" data-state="empty" data-animation="idle"></div>
-                        </game-tile>
-                        <game-tile>
-                            <div class="tile" data-state="empty" data-animation="idle"></div>
-                        </game-tile>
-                    </div>
-                </game-row>
-                <game-row letters="" length="5">
-                    <div class="row">
-                        <game-tile>
-                            <div class="tile" data-state="empty" data-animation="idle"></div>
-                        </game-tile>
-                        <game-tile>
-                            <div class="tile" data-state="empty" data-animation="idle"></div>
-                        </game-tile>
-                        <game-tile>
-                            <div class="tile" data-state="empty" data-animation="idle"></div>
-                        </game-tile>
-                        <game-tile>
-                            <div class="tile" data-state="empty" data-animation="idle"></div>
-                        </game-tile>
-                        <game-tile>
-                            <div class="tile" data-state="empty" data-animation="idle"></div>
-                        </game-tile>
-                    </div>
-                </game-row>
-            </div>
+        <div id="board">
+            <game-row letters="" length="5">
+                <div class="row">
+                    <game-tile>
+                        <div class="tile" data-state="empty" data-animation="idle"></div>
+                    </game-tile>
+                    <game-tile>
+                        <div class="tile" data-state="empty" data-animation="idle"></div>
+                    </game-tile>
+                    <game-tile>
+                        <div class="tile" data-state="empty" data-animation="idle"></div>
+                    </game-tile>
+                    <game-tile>
+                        <div class="tile" data-state="empty" data-animation="idle"></div>
+                    </game-tile>
+                    <game-tile>
+                        <div class="tile" data-state="empty" data-animation="idle"></div>
+                    </game-tile>
+                </div>
+            </game-row>
+            <game-row letters="" length="5">
+                <div class="row">
+                    <game-tile>
+                        <div class="tile" data-state="empty" data-animation="idle"></div>
+                    </game-tile>
+                    <game-tile>
+                        <div class="tile" data-state="empty" data-animation="idle"></div>
+                    </game-tile>
+                    <game-tile>
+                        <div class="tile" data-state="empty" data-animation="idle"></div>
+                    </game-tile>
+                    <game-tile>
+                        <div class="tile" data-state="empty" data-animation="idle"></div>
+                    </game-tile>
+                    <game-tile>
+                        <div class="tile" data-state="empty" data-animation="idle"></div>
+                    </game-tile>
+                </div>
+            </game-row>
+            <game-row letters="" length="5">
+                <div class="row">
+                    <game-tile>
+                        <div class="tile" data-state="empty" data-animation="idle"></div>
+                    </game-tile>
+                    <game-tile>
+                        <div class="tile" data-state="empty" data-animation="idle"></div>
+                    </game-tile>
+                    <game-tile>
+                        <div class="tile" data-state="empty" data-animation="idle"></div>
+                    </game-tile>
+                    <game-tile>
+                        <div class="tile" data-state="empty" data-animation="idle"></div>
+                    </game-tile>
+                    <game-tile>
+                        <div class="tile" data-state="empty" data-animation="idle"></div>
+                    </game-tile>
+                </div>
+            </game-row>
+            <game-row letters="" length="5">
+                <div class="row">
+                    <game-tile>
+                        <div class="tile" data-state="empty" data-animation="idle"></div>
+                    </game-tile>
+                    <game-tile>
+                        <div class="tile" data-state="empty" data-animation="idle"></div>
+                    </game-tile>
+                    <game-tile>
+                        <div class="tile" data-state="empty" data-animation="idle"></div>
+                    </game-tile>
+                    <game-tile>
+                        <div class="tile" data-state="empty" data-animation="idle"></div>
+                    </game-tile>
+                    <game-tile>
+                        <div class="tile" data-state="empty" data-animation="idle"></div>
+                    </game-tile>
+                </div>
+            </game-row>
+            <game-row letters="" length="5">
+                <div class="row">
+                    <game-tile>
+                        <div class="tile" data-state="empty" data-animation="idle"></div>
+                    </game-tile>
+                    <game-tile>
+                        <div class="tile" data-state="empty" data-animation="idle"></div>
+                    </game-tile>
+                    <game-tile>
+                        <div class="tile" data-state="empty" data-animation="idle"></div>
+                    </game-tile>
+                    <game-tile>
+                        <div class="tile" data-state="empty" data-animation="idle"></div>
+                    </game-tile>
+                    <game-tile>
+                        <div class="tile" data-state="empty" data-animation="idle"></div>
+                    </game-tile>
+                </div>
+            </game-row>
+            <game-row letters="" length="5">
+                <div class="row">
+                    <game-tile>
+                        <div class="tile" data-state="empty" data-animation="idle"></div>
+                    </game-tile>
+                    <game-tile>
+                        <div class="tile" data-state="empty" data-animation="idle"></div>
+                    </game-tile>
+                    <game-tile>
+                        <div class="tile" data-state="empty" data-animation="idle"></div>
+                    </game-tile>
+                    <game-tile>
+                        <div class="tile" data-state="empty" data-animation="idle"></div>
+                    </game-tile>
+                    <game-tile>
+                        <div class="tile" data-state="empty" data-animation="idle"></div>
+                    </game-tile>
+                </div>
+            </game-row>
+        </div>
     </div>
     <div id="keyboard">
         <!-- keyboard section including all accents -->
