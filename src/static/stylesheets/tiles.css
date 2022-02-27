@@ -7,29 +7,39 @@
     width: 100%;
     height: calc(100vh - 52px);
 }
+#game.hide {
+    overflow: hidden;
+    opacity: 0.3;
+}
+
+#board-container {
+    display: flex;
+    justify-content: flex-start;
+    height: 100%;
+}
 
 #board {
     display: grid;
     grid-template-rows: repeat(5, 1fr);
     gap: 5px;
+    height: min-content;
+    margin-top: 10px;
 }
+
 .row {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     grid-gap: 5px;
     max-width: min-content;
-    font-size: 1.4vmax;
+    font-size: 14px;
 }
-@media screen and (min-width: 400px) {
-    .row {
-       font-size: 14px;
-    }
-}
+
 game-tile {
     display: inline-block;
     width: 4em;
     height: 4em;
 }
+
 .tile {
     width: 100%;
     display: inline-flex;
@@ -46,15 +56,23 @@ game-tile {
     font-family: Urbanist;
     transition: 150ms ease;
 }
+
 .tile::before {
     content: '';
     display: inline-block;
     padding-bottom: 100%;
 }
-@media (max-height: 600px) {
+
+@media (max-width: 350px) {
     .tile {
-        font-size: 2em;
-        line-height: 1em;
+        font-size: 1.5em;
+        line-height: 1.5em;
+    }
+    .row {
+        font-size: 1vmax;
+    }
+    #game {
+        height: fit-content;
     }
 }
 
@@ -62,18 +80,25 @@ game-tile {
 .tile[data-state='empty'] {
     border: 2px solid var(--color-tone-4);
 }
+
 .tile[data-state='tbd'] {
     background-color: var(--color-tone-7);
     border: 2px solid var(--color-tone-3);
     color: var(--color-tone-1);
 }
-.tile[data-state='correct'], button[data-state='correct']{
+
+.tile[data-state='correct'],
+button[data-state='correct'] {
     background-color: var(--color-correct) !important;
 }
-.tile[data-state='present'], button[data-state='present'] {
+
+.tile[data-state='present'],
+button[data-state='present'] {
     background-color: var(--color-present) !important;
 }
-.tile[data-state='absent'], button[data-state='absent'] {
+
+.tile[data-state='absent'],
+button[data-state='absent'] {
     background-color: var(--color-absent) !important;
 }
 
@@ -82,6 +107,7 @@ game-tile {
     animation-name: PopIn;
     animation-duration: 100ms;
 }
+
 @keyframes PopIn {
     from {
         transform: scale(0.8);
@@ -99,6 +125,7 @@ game-tile {
     animation-duration: 250ms;
     animation-timing-function: ease-in;
 }
+
 @keyframes FlipIn {
     0% {
         transform: rotateX(0);
@@ -114,6 +141,7 @@ game-tile {
     animation-duration: 250ms;
     animation-timing-function: ease-in;
 }
+
 @keyframes FlipOut {
     0% {
         transform: rotateX(-90deg);
@@ -128,6 +156,7 @@ game-tile {
     animation-name: Bounce;
     animation-duration: 1000ms;
 }
+
 @keyframes Bounce {
 
     0%,
@@ -162,6 +191,7 @@ game-row[invalid] {
 }
 
 @keyframes Shake {
+
     10%,
     90% {
         transform: translateX(-1px);

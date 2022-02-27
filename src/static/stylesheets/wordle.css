@@ -3,7 +3,10 @@ body {
     color: var(--font-color);
     transition: 150ms ease-in;
     margin: 0;
+    padding: 0;
+    height: 100%;
 }
+
 /* header elements */
 header {
     display: flex;
@@ -21,14 +24,6 @@ header div {
     margin: 0 5px;
 }
 
-#help {
-    background: var(--help-button);
-    width: 24px;
-    height: 24px;
-    transition: 150ms ease-in;
-    cursor: pointer;
-}
-
 #title {
     font-family: Urbanist;
     font-size: 28px;
@@ -37,6 +32,32 @@ header div {
     transition: 150ms ease-in;
     margin-left: 40px;
 }
+@media screen and (max-width: 300px) {
+    header {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        min-width: 140px;
+        padding: 0 5px;
+        height: 150px;
+    }
+    #title {
+        margin-left: 10px;
+    }
+    header div {
+        margin: 5px 5px;
+    }
+}
+#help {
+    background: var(--help-button);
+    width: 24px;
+    height: 24px;
+    transition: 150ms ease-in;
+    cursor: pointer;
+}
+
+
 
 #menu-right {
     display: flex;
@@ -63,7 +84,7 @@ header div {
     align-items: center;
     justify-content: center;
     font-family: Urbanist;
-    
+
     opacity: 0;
     transform: translateY(30px);
     transition: 150ms ease;

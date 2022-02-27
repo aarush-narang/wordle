@@ -18,19 +18,6 @@
 </head>
 
 <body>
-    <header>
-        <div id="menu-left">
-            <div id="help"></div>
-        </div>
-        <div id="title">Wordle</div>
-        <div id="menu-right">
-            <div id="stats">
-                <!-- stats on how many guesses they took for each wordle, seperated by language 
-                (# of wordles played, win %, win streak, max streak, guess dist.,) (MODAL) -->
-            </div>
-            <div id="settings"></div>
-        </div>
-    </header>
     <div id="modals">
         <div id="help-modal" class="modal">
             <div id="help-modal-header" class="modal-header">
@@ -160,10 +147,26 @@
         </div>
         <div id="stats-modal"></div>
     </div>
+    <header>
+        <div id="menu-left">
+            <div id="help"></div>
+        </div>
+        <div id="title">Wordle</div>
+        <div id="menu-right">
+            <div id="stats">
+                <!-- stats on how many guesses they took for each wordle, seperated by language 
+                (# of wordles played, win %, win streak, max streak, guess distributeion (how many tries they got the word in), next wordle time, share) (MODAL) -->
+                <!-- avg correct letters per word, avg present letters per word, avg absent letters per word
+                 -->
+            </div>
+            <div id="settings"></div>
+        </div>
+    </header>
 
     <div id="game">
         <div id="msg"></div>
-        <div id="board">
+        <div id="board-container">
+            <div id="board">
             <game-row letters="" length="5">
                 <div class="row">
                     <game-tile>
@@ -279,6 +282,8 @@
                 </div>
             </game-row>
         </div>
+        </div>
+        
         <div id="keyboard-container">
             <div id="keyboard">
                 <div class="k-row">
@@ -331,8 +336,6 @@
 
         </div>
     </div>
-
-
 </body>
 
 </html>

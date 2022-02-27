@@ -1,4 +1,5 @@
 (() => {
+    const game = document.getElementById('game');
     const modalClose = document.querySelectorAll('.modal-close');
     const statsModal = document.getElementById('stats-modal');
     const helpModal = document.getElementById('help-modal');
@@ -24,6 +25,7 @@
 
     function closeModal(el) {
         el.classList.remove('open');
+        game.classList.remove('hide')
         setTimeout(() => {
             el.style.display = 'none'
         }, 200);
@@ -31,12 +33,10 @@
 
     helpBtn.addEventListener('click', () => {
         if (helpModal.classList.contains('open')) {
-            helpModal.classList.remove('open')
-            setTimeout(() => {
-                helpModal.style.display = 'none'
-            }, 200);
+            closeModal(helpModal)
         } else {
             helpModal.style.display = 'flex'
+            game.classList.add('hide')
 
             setTimeout(() => {
                 helpModal.classList.add('open')
@@ -52,12 +52,10 @@
     })
     settingsBtn.addEventListener('click', () => {
         if (settingsModal.classList.contains('open')) {
-            settingsModal.classList.remove('open')
-            setTimeout(() => {
-                settingsModal.style.display = 'none'
-            }, 200);
+            closeModal(settingsModal)
         } else {
             settingsModal.style.display = 'flex'
+            game.classList.add('hide')
 
             setTimeout(() => {
                 settingsModal.classList.add('open')
@@ -87,7 +85,6 @@
     const hardModeSwitch = document.getElementById('hard-mode-checkbox')
 
     hardModeSwitch.checked = boardState ? boardState.hardMode : false // load previous value
-    hardModeSwitch.toggleAttribute('disabled', boardState ? boardState.hardMode : false)
 
     hardModeSwitch.parentNode.addEventListener('click', () => {
         boardState = JSON.parse(window.localStorage.getItem(modeSelect.value + '_boardState'))
