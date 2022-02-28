@@ -18,7 +18,7 @@
 </head>
 
 <body>
-    <div id="modals">
+    <div id="large-modals">
         <div id="help-modal" class="modal">
             <div id="help-modal-header" class="modal-header">
                 <div></div>
@@ -28,7 +28,8 @@
             <div id="help-modal-content" class="modal-content">
                 <p>You have <b>6 (six)</b> tries to guess the WORDLE</p>
                 <p>Each guess must be a valid <b>five-letter</b> word. Hit the enter button or enter key to submit.</p>
-                <p>After you make a guess, the color of the tiles of your guess will change to indicate how close (or not close) your guess was from the word.</p>
+                <p>After you make a guess, the color of the tiles of your guess will change to indicate how close (or
+                    not close) your guess was from the word.</p>
                 <br />
                 <div id="help-examples">
                     <h3>Examples:</h3>
@@ -145,20 +146,143 @@
                 </div>
             </div>
         </div>
-        <div id="stats-modal"></div>
     </div>
+    <div id="small-modals">
+        <div id="stats-modal" class="small-modal">
+            <div id="settings-modal-header" class="modal-header">
+                <div></div>
+                <div id="settings-modal-title" class="modal-title">Statistics</div>
+                <div class="modal-close"></div>
+            </div>
+            <div id="stats-content">
+                <div id="stats-info">
+                    <!-- seperated by language -->
+                    <div id="stats-row-1" class="stats-row">
+                        <!-- # of wordles played, win %, win streak, max streak -->
+                        <div id="stats-num-played">
+                            <h4 id="num-played">0</h4>
+                            <h6>Games Played</h6>
+                        </div>
+                        <div id="stats-win-percent">
+                            <h4 id="win-percent">0%</h4>
+                            <h6>Win %</h6>
+                        </div>
+                        <div id="stats-win-streak">
+                            <h4 id="win-streak">0</h4>
+                            <h6>Win Streak</h6>
+                        </div>
+                        <div id="stats-max-streak">
+                            <h4 id="max-streak">0</h4>
+                            <h6>Max Win Streak</h6>
+                        </div>
+                    </div>
+                    <div id="stats-row-2" class="stats-row">
+                        <!-- avg correct letters per word, avg present letters per word, avg absent letters per word -->
+                        <div id="stats-avg-correct">
+                            <h4 id="avg-correct">0%</h4>
+                            <h6>
+                                Avg Correct Letters
+                                <br />
+                                Per Word
+                            </h6>
+                        </div>
+                        <div id="stats-avg-present">
+                            <h4 id="avg-present">0%</h4>
+                            <h6>
+                                Avg Present Letters
+                                <br />
+                                Per Word
+                            </h6>
+                        </div>
+                        <div id="stats-avg-absent">
+                            <h4 id="avg-absent">0%</h4>
+                            <h6>
+                                Avg Absent Letters
+                                <br />
+                                Per Word
+                            </h6>
+                        </div>
+                    </div>
+                </div>
+                <div id="stats-dist">
+                    <h3>Guess Distribution</h3>
+                    <div id="guess-distribution">
+                        <div class="graph-container">
+                            <div class="guess">1</div>
+                            <div class="graph">
+                                <div class="graph-bar align-right">
+                                    <div class="num-guesses"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="graph-container">
+                            <div class="guess">2</div>
+                            <div class="graph">
+                                <div class="graph-bar align-right">
+                                    <div class="num-guesses"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="graph-container">
+                            <div class="guess">3</div>
+                            <div class="graph">
+                                <div class="graph-bar align-right">
+                                    <div class="num-guesses"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="graph-container">
+                            <div class="guess">4</div>
+                            <div class="graph">
+                                <div class="graph-bar align-right">
+                                    <div class="num-guesses"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="graph-container">
+                            <div class="guess">5</div>
+                            <div class="graph">
+                                <div class="graph-bar align-right">
+                                    <div class="num-guesses"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="graph-container">
+                            <div class="guess">6</div>
+                            <div class="graph">
+                                <div class="graph-bar align-right">
+                                    <div class="num-guesses"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- guess distribution (how many tries they got the word in) -->
+                </div>
+                <div id="stats-other">
+
+                    <div id="stats-timer">
+                        <div id="timer">
+                            <div id="time-left"></div>
+                            <div id="timer-fill">
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <button id="stats-share">
+                        Share
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <header>
         <div id="menu-left">
             <div id="help"></div>
         </div>
         <div id="title">Wordle</div>
         <div id="menu-right">
-            <div id="stats">
-                <!-- stats on how many guesses they took for each wordle, seperated by language 
-                (# of wordles played, win %, win streak, max streak, guess distributeion (how many tries they got the word in), next wordle time, share) (MODAL) -->
-                <!-- avg correct letters per word, avg present letters per word, avg absent letters per word
-                 -->
-            </div>
+            <div id="stats"></div>
             <div id="settings"></div>
         </div>
     </header>
@@ -167,123 +291,123 @@
         <div id="msg"></div>
         <div id="board-container">
             <div id="board">
-            <game-row letters="" length="5">
-                <div class="row">
-                    <game-tile>
-                        <div class="tile" data-state="empty" data-animation="idle"></div>
-                    </game-tile>
-                    <game-tile>
-                        <div class="tile" data-state="empty" data-animation="idle"></div>
-                    </game-tile>
-                    <game-tile>
-                        <div class="tile" data-state="empty" data-animation="idle"></div>
-                    </game-tile>
-                    <game-tile>
-                        <div class="tile" data-state="empty" data-animation="idle"></div>
-                    </game-tile>
-                    <game-tile>
-                        <div class="tile" data-state="empty" data-animation="idle"></div>
-                    </game-tile>
-                </div>
-            </game-row>
-            <game-row letters="" length="5">
-                <div class="row">
-                    <game-tile>
-                        <div class="tile" data-state="empty" data-animation="idle"></div>
-                    </game-tile>
-                    <game-tile>
-                        <div class="tile" data-state="empty" data-animation="idle"></div>
-                    </game-tile>
-                    <game-tile>
-                        <div class="tile" data-state="empty" data-animation="idle"></div>
-                    </game-tile>
-                    <game-tile>
-                        <div class="tile" data-state="empty" data-animation="idle"></div>
-                    </game-tile>
-                    <game-tile>
-                        <div class="tile" data-state="empty" data-animation="idle"></div>
-                    </game-tile>
-                </div>
-            </game-row>
-            <game-row letters="" length="5">
-                <div class="row">
-                    <game-tile>
-                        <div class="tile" data-state="empty" data-animation="idle"></div>
-                    </game-tile>
-                    <game-tile>
-                        <div class="tile" data-state="empty" data-animation="idle"></div>
-                    </game-tile>
-                    <game-tile>
-                        <div class="tile" data-state="empty" data-animation="idle"></div>
-                    </game-tile>
-                    <game-tile>
-                        <div class="tile" data-state="empty" data-animation="idle"></div>
-                    </game-tile>
-                    <game-tile>
-                        <div class="tile" data-state="empty" data-animation="idle"></div>
-                    </game-tile>
-                </div>
-            </game-row>
-            <game-row letters="" length="5">
-                <div class="row">
-                    <game-tile>
-                        <div class="tile" data-state="empty" data-animation="idle"></div>
-                    </game-tile>
-                    <game-tile>
-                        <div class="tile" data-state="empty" data-animation="idle"></div>
-                    </game-tile>
-                    <game-tile>
-                        <div class="tile" data-state="empty" data-animation="idle"></div>
-                    </game-tile>
-                    <game-tile>
-                        <div class="tile" data-state="empty" data-animation="idle"></div>
-                    </game-tile>
-                    <game-tile>
-                        <div class="tile" data-state="empty" data-animation="idle"></div>
-                    </game-tile>
-                </div>
-            </game-row>
-            <game-row letters="" length="5">
-                <div class="row">
-                    <game-tile>
-                        <div class="tile" data-state="empty" data-animation="idle"></div>
-                    </game-tile>
-                    <game-tile>
-                        <div class="tile" data-state="empty" data-animation="idle"></div>
-                    </game-tile>
-                    <game-tile>
-                        <div class="tile" data-state="empty" data-animation="idle"></div>
-                    </game-tile>
-                    <game-tile>
-                        <div class="tile" data-state="empty" data-animation="idle"></div>
-                    </game-tile>
-                    <game-tile>
-                        <div class="tile" data-state="empty" data-animation="idle"></div>
-                    </game-tile>
-                </div>
-            </game-row>
-            <game-row letters="" length="5">
-                <div class="row">
-                    <game-tile>
-                        <div class="tile" data-state="empty" data-animation="idle"></div>
-                    </game-tile>
-                    <game-tile>
-                        <div class="tile" data-state="empty" data-animation="idle"></div>
-                    </game-tile>
-                    <game-tile>
-                        <div class="tile" data-state="empty" data-animation="idle"></div>
-                    </game-tile>
-                    <game-tile>
-                        <div class="tile" data-state="empty" data-animation="idle"></div>
-                    </game-tile>
-                    <game-tile>
-                        <div class="tile" data-state="empty" data-animation="idle"></div>
-                    </game-tile>
-                </div>
-            </game-row>
+                <game-row letters="" length="5">
+                    <div class="row">
+                        <game-tile>
+                            <div class="tile" data-state="empty" data-animation="idle"></div>
+                        </game-tile>
+                        <game-tile>
+                            <div class="tile" data-state="empty" data-animation="idle"></div>
+                        </game-tile>
+                        <game-tile>
+                            <div class="tile" data-state="empty" data-animation="idle"></div>
+                        </game-tile>
+                        <game-tile>
+                            <div class="tile" data-state="empty" data-animation="idle"></div>
+                        </game-tile>
+                        <game-tile>
+                            <div class="tile" data-state="empty" data-animation="idle"></div>
+                        </game-tile>
+                    </div>
+                </game-row>
+                <game-row letters="" length="5">
+                    <div class="row">
+                        <game-tile>
+                            <div class="tile" data-state="empty" data-animation="idle"></div>
+                        </game-tile>
+                        <game-tile>
+                            <div class="tile" data-state="empty" data-animation="idle"></div>
+                        </game-tile>
+                        <game-tile>
+                            <div class="tile" data-state="empty" data-animation="idle"></div>
+                        </game-tile>
+                        <game-tile>
+                            <div class="tile" data-state="empty" data-animation="idle"></div>
+                        </game-tile>
+                        <game-tile>
+                            <div class="tile" data-state="empty" data-animation="idle"></div>
+                        </game-tile>
+                    </div>
+                </game-row>
+                <game-row letters="" length="5">
+                    <div class="row">
+                        <game-tile>
+                            <div class="tile" data-state="empty" data-animation="idle"></div>
+                        </game-tile>
+                        <game-tile>
+                            <div class="tile" data-state="empty" data-animation="idle"></div>
+                        </game-tile>
+                        <game-tile>
+                            <div class="tile" data-state="empty" data-animation="idle"></div>
+                        </game-tile>
+                        <game-tile>
+                            <div class="tile" data-state="empty" data-animation="idle"></div>
+                        </game-tile>
+                        <game-tile>
+                            <div class="tile" data-state="empty" data-animation="idle"></div>
+                        </game-tile>
+                    </div>
+                </game-row>
+                <game-row letters="" length="5">
+                    <div class="row">
+                        <game-tile>
+                            <div class="tile" data-state="empty" data-animation="idle"></div>
+                        </game-tile>
+                        <game-tile>
+                            <div class="tile" data-state="empty" data-animation="idle"></div>
+                        </game-tile>
+                        <game-tile>
+                            <div class="tile" data-state="empty" data-animation="idle"></div>
+                        </game-tile>
+                        <game-tile>
+                            <div class="tile" data-state="empty" data-animation="idle"></div>
+                        </game-tile>
+                        <game-tile>
+                            <div class="tile" data-state="empty" data-animation="idle"></div>
+                        </game-tile>
+                    </div>
+                </game-row>
+                <game-row letters="" length="5">
+                    <div class="row">
+                        <game-tile>
+                            <div class="tile" data-state="empty" data-animation="idle"></div>
+                        </game-tile>
+                        <game-tile>
+                            <div class="tile" data-state="empty" data-animation="idle"></div>
+                        </game-tile>
+                        <game-tile>
+                            <div class="tile" data-state="empty" data-animation="idle"></div>
+                        </game-tile>
+                        <game-tile>
+                            <div class="tile" data-state="empty" data-animation="idle"></div>
+                        </game-tile>
+                        <game-tile>
+                            <div class="tile" data-state="empty" data-animation="idle"></div>
+                        </game-tile>
+                    </div>
+                </game-row>
+                <game-row letters="" length="5">
+                    <div class="row">
+                        <game-tile>
+                            <div class="tile" data-state="empty" data-animation="idle"></div>
+                        </game-tile>
+                        <game-tile>
+                            <div class="tile" data-state="empty" data-animation="idle"></div>
+                        </game-tile>
+                        <game-tile>
+                            <div class="tile" data-state="empty" data-animation="idle"></div>
+                        </game-tile>
+                        <game-tile>
+                            <div class="tile" data-state="empty" data-animation="idle"></div>
+                        </game-tile>
+                        <game-tile>
+                            <div class="tile" data-state="empty" data-animation="idle"></div>
+                        </game-tile>
+                    </div>
+                </game-row>
+            </div>
         </div>
-        </div>
-        
+
         <div id="keyboard-container">
             <div id="keyboard">
                 <div class="k-row">

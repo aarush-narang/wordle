@@ -1,15 +1,15 @@
 (() => {
     const game = document.getElementById('game');
     const modalClose = document.querySelectorAll('.modal-close');
-    const statsModal = document.getElementById('stats-modal');
-    const helpModal = document.getElementById('help-modal');
+
+    const settingsBtn = document.getElementById('settings')
     const settingsModal = document.getElementById('settings-modal')
 
-    // implement stats button modal
     const statsBtn = document.getElementById('stats')
-    const settingsBtn = document.getElementById('settings')
+    const statsModal = document.getElementById('stats-modal');
 
     const helpBtn = document.getElementById('help')
+    const helpModal = document.getElementById('help-modal');
     const helpExamples = document.getElementById('help-examples');
     const exampleTiles = helpExamples.querySelectorAll('.tile')
 
@@ -34,32 +34,72 @@
     helpBtn.addEventListener('click', () => {
         if (helpModal.classList.contains('open')) {
             closeModal(helpModal)
+            game.classList.remove('hide')
         } else {
-            helpModal.style.display = 'flex'
-            game.classList.add('hide')
+            if (helpModal.style.display !== 'flex') {
+                closeModal(statsModal)
+                closeModal(settingsModal)
 
-            setTimeout(() => {
-                helpModal.classList.add('open')
-                exampleTiles.forEach(tile => {
-                    if (tile.getAttribute('data-state') !== 'tbd') {
-                        setTimeout(() => {
-                            flipTile(tile)
-                        }, 200);
-                    }
-                })
-            }, 1);
+                helpModal.style.display = 'flex'
+                game.classList.add('hide')
+
+                setTimeout(() => {
+                    helpModal.classList.add('open')
+                    exampleTiles.forEach(tile => {
+                        if (tile.getAttribute('data-state') !== 'tbd') {
+                            setTimeout(() => {
+                                flipTile(tile)
+                            }, 200);
+                        }
+                    })
+                }, 1);
+            }
+
         }
     })
     settingsBtn.addEventListener('click', () => {
         if (settingsModal.classList.contains('open')) {
             closeModal(settingsModal)
+            game.classList.remove('hide')
         } else {
-            settingsModal.style.display = 'flex'
-            game.classList.add('hide')
+            if (settingsModal.style.display !== 'flex') {
+                closeModal(statsModal)
+                closeModal(helpModal)
 
-            setTimeout(() => {
-                settingsModal.classList.add('open')
-            }, 1);
+                settingsModal.style.display = 'flex'
+                game.classList.add('hide')
+
+                setTimeout(() => {
+                    settingsModal.classList.add('open')
+                }, 1);
+            }
+        }
+    })
+    statsBtn.addEventListener('click', () => {
+        if (statsModal.classList.contains('open')) {
+            game.classList.remove('hide')
+            closeModal(statsModal)
+        } else {
+            if (statsModal.style.display !== 'flex') {
+                closeModal(settingsModal)
+                closeModal(helpModal)
+
+                game.classList.add('hide')
+                statsModal.style.display = 'flex'
+
+                setTimeout(() => { // wait for background to hide and modal to show
+                    statsModal.classList.add('open')
+                }, 1);
+
+                document.onclick = (e) => { // close modal on click outside
+                    if (e.path.includes(statsModal)) return
+                    if (!e.target.id || e.target.id !== 'stats') {
+                        document.onclick = null;
+                        closeModal(statsModal)
+                        game.classList.remove('hide')
+                    }
+                }
+            }
         }
     })
     modalClose.forEach(btn => {
@@ -68,6 +108,13 @@
             closeModal(settingsModal)
             closeModal(statsModal)
         })
+    })
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeModal(helpModal)
+            closeModal(settingsModal)
+            closeModal(statsModal)
+        }
     })
 
     const modeSelect = document.getElementById('modes-select')
@@ -97,4 +144,36 @@
             window.localStorage.setItem(modeSelect.value + '_boardState', JSON.stringify(boardState))
         }
     })
+
+    // convert ms to hours, minutes, seconds and ms
+    function msToTime(duration) {
+        var milliseconds = Math.floor((duration % 1000) / 100),
+            seconds = Math.floor((duration / 1000) % 60),
+            minutes = Math.floor((duration / (1000 * 60)) % 60),
+            hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+
+        hours = (hours < 10) ? "0" + hours : hours;
+        minutes = (minutes < 10) ? "0" + minutes : minutes;
+        seconds = (seconds < 10) ? "0" + seconds : seconds;
+        return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
+    }
+    const timeText = document.getElementById('time-left')
+    const timerFill = document.getElementById('timer-fill')
+
+    function updateTime(nextWordTS) {
+        const currentTS = new Date().getTime()
+        const timeLeft = nextWordTS - currentTS
+        timeText.innerText = msToTime(timeLeft)
+
+        const totalTime = 24 * 60 * 60 * 1000
+        const timeLeftPercent = (timeLeft / totalTime) * 100
+        timerFill.style.background = `linear-gradient(0deg, rgba(97, 127, 165, 1) ${timeLeftPercent}%, transparent ${timeLeftPercent}%)`
+    }
+
+    const nextWordTS = new Date().setHours(0, 0, 0, 0) + (24 * 60 * 60 * 1000)
+    updateTime(nextWordTS, timeText)
+    setInterval(() => {
+        updateTime(nextWordTS, timeText)
+    }, 100);
+
 })()

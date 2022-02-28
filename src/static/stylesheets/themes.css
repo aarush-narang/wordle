@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Urbanist&display=swap');
 :root {
     --primary-color: rgb(15, 24, 34);
+    --secondary-color: rgb(28, 43, 61);
     --font-color: rgb(200, 229, 255);
     --theme-back-color: hsl(210, 29%, 45%);
     --theme-switch-color: hsl(209, 45%, 26%);
@@ -12,6 +13,8 @@
     --settings-button: url(../images/settings-white.png) no-repeat center;
     --msg-bkg-color: var(--full-modal-bkg-color);
     --tile-text-color: hsl(0, 0%, 100%);
+    --timer-back-color: var(--secondary-color);
+    --timer-fill-color: rgb(97, 127, 165);
 
     --keyboard-btn-color: rgb(118, 143, 184);
     --keyboard-font-color: rgb(0, 0, 0);
@@ -29,6 +32,7 @@
 
 [data-theme="light"] {
     --primary-color: rgb(163, 181, 211);
+    --secondary-color: rgb(129, 143, 167);
     --font-color: rgb(1, 4, 8);
     --theme-back-color: hsl(210, 40%, 65%);
     --theme-switch-color: hsl(209, 35%, 35%);
@@ -40,6 +44,8 @@
     --settings-button: url(../images/settings-black.png) no-repeat center;
     --msg-bkg-color: var(--full-modal-bkg-color);
     --tile-text-color: hsl(0, 0%, 100%);
+    --timer-back-color: var(--secondary-color);
+    --timer-fill-color: rgb(66, 86, 112);
 
     --keyboard-btn-color: rgb(15, 24, 34);
     --keyboard-font-color: rgb(255, 255, 255);

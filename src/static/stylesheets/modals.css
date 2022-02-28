@@ -1,5 +1,5 @@
 /* modals */
-#modals {
+#large-modals {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -24,14 +24,11 @@
     pointer-events: none;
     user-select: none;
 
-    top: 0;
-    bottom: 0;
-
     min-width: 260px;
     width: calc(100vw - 30px);
 
-    min-height: calc(100vh - 140px);
-    
+    min-height: calc(100vh - 60px);
+
     background-color: var(--full-modal-bkg-color);
     opacity: 0;
     transform: translateY(20px);
@@ -177,10 +174,251 @@
     justify-content: center;
     outline: none;
     border: none;
-    
+
     padding: 5px;
     margin-left: 15px;
     border-radius: 3px;
     background-color: var(--theme-back-color);
     color: var(--color-tone-7);
+}
+
+/* small modal for statistics*/
+#small-modals {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    pointer-events: none;
+    user-select: none;
+
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.small-modal {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    pointer-events: all;
+    overflow: auto;
+
+    background-color: var(--full-modal-bkg-color);
+    border-radius: 15px;
+
+    min-width: 340px;
+    width: 60%;
+    max-width: 500px;
+    min-height: 200px;
+    height: 45%;
+    max-height: 400px;
+
+    opacity: 0;
+    transform: translateY(20px);
+
+    transition: transform 100ms ease,
+        background-color 160ms ease,
+        opacity 160ms ease;
+
+    margin-top: 20px;
+    padding: 20px;
+    z-index: 1000;
+}
+
+/* TODO: create media query for statistics info 
+if width is small enough, push info into a column */
+
+.small-modal.open {
+    opacity: 1;
+    transform: translateY(0px);
+}
+
+@media screen and (max-height: 210px) {
+    #small-modals {
+        align-items: flex-start;
+    }
+}
+
+#stats-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    font-family: Urbanist;
+    color: var(--font-color);
+}
+
+#stats-content>#stats-info,
+#stats-content>#stats-dist {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.stats-row {
+    display: flex;
+    flex-direction: row;
+
+    height: min-content;
+    margin-bottom: 20px;
+}
+
+.stats-row>div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    text-align: center;
+
+    margin: 0 20px;
+    min-width: 50px;
+}
+
+.stats-row h6 {
+    font-size: 10px;
+    font-weight: 100;
+    margin: 5px 0;
+}
+
+.stats-row h4 {
+    margin: 5px 0;
+}
+
+/* guess dist */
+#stats-dist {
+    width: 80%;
+}
+
+#stats-dist h3 {
+    margin-bottom: 15px;
+    font-weight: 100;
+}
+
+#guess-distribution {
+    width: 80%;
+}
+
+.graph-container {
+    width: 100%;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    padding-bottom: 4px;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.graph {
+    width: 100%;
+    height: 100%;
+    padding-left: 4px;
+}
+
+.graph-bar {
+    height: 100%;
+    width: 7%;
+    position: relative;
+    background-color: var(--color-absent);
+    display: flex;
+    justify-content: center;
+}
+
+.graph-bar.highlight {
+    background-color: var(--color-correct);
+}
+
+.graph-bar.align-right {
+    justify-content: flex-end;
+    padding-right: 8px;
+}
+
+.num-guesses {
+    font-weight: bold;
+    color: #fff;
+}
+
+.guess {
+    text-align: center;
+    min-width: 8px;
+}
+
+/* other stats like timer, share btn */
+#stats-other {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: 20px;
+    width: 80%;
+}
+
+#stats-timer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    font-family: Urbanist;
+    color: var(--font-color);
+}
+
+/* timer */
+#timer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+
+    border: 15px solid var(--timer-back-color);
+    border-radius: 100%;
+    width: 100px;
+    height: 100px;
+}
+#timer-fill {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    
+    border-radius: 100%;
+    height: 100%;
+    width: 100%;
+    z-index: 30;
+}
+#time-left {
+    z-index: 50;
+}
+#stats-share {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    outline: none;
+
+    color: var(--font-color);
+    font-family: Urbanist;
+
+    transition: 150ms ease;
+    cursor: pointer;
+
+    width: 130px;
+    height: 70px;
+    border-radius: 10px;
+    margin-left: 20px;
+
+    background-color: var(--secondary-color);
+}
+#stats-share:hover {
+    opacity: 0.95;
+    transform: scale(0.98);
+}
+#stats-share:active {
+    opacity: 0.9;
+    transform: scale(0.95);
 }
