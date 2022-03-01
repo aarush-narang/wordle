@@ -158,7 +158,7 @@
         return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
     }
     const timeText = document.getElementById('time-left')
-    const timerFill = document.getElementById('timer-fill')
+    const timerFill = document.getElementById('timer-pie')
 
     function updateTime(nextWordTS) {
         const currentTS = new Date().getTime()
@@ -167,7 +167,7 @@
 
         const totalTime = 24 * 60 * 60 * 1000
         const timeLeftPercent = (timeLeft / totalTime) * 100
-        timerFill.style.background = `linear-gradient(0deg, rgba(97, 127, 165, 1) ${timeLeftPercent}%, transparent ${timeLeftPercent}%)`
+        timerFill.style.background = `conic-gradient(var(--timer-fill-color) ${100-timeLeftPercent}%, #0000 0)`
     }
 
     const nextWordTS = new Date().setHours(0, 0, 0, 0) + (24 * 60 * 60 * 1000)

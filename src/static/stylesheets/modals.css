@@ -180,6 +180,7 @@
     border-radius: 3px;
     background-color: var(--theme-back-color);
     color: var(--color-tone-7);
+    font-family: Urbanist;
 }
 
 /* small modal for statistics*/
@@ -351,7 +352,7 @@ if width is small enough, push info into a column */
     flex-direction: row;
     justify-content: space-evenly;
     align-items: center;
-    margin-top: 20px;
+    margin: 40px 0 25px 0;
     width: 80%;
 }
 
@@ -372,26 +373,40 @@ if width is small enough, push info into a column */
     align-items: center;
     justify-content: center;
     position: relative;
-
-    border: 15px solid var(--timer-back-color);
-    border-radius: 100%;
     width: 100px;
-    height: 100px;
+    aspect-ratio: 1;
 }
-#timer-fill {
+#timer-back {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     position: absolute;
     
+    background: var(--timer-back-color);
     border-radius: 100%;
-    height: 100%;
-    width: 100%;
-    z-index: 30;
+    width: 140px;
+    aspect-ratio: 1;
+}
+#timer-mask {
+    z-index: 80;
+    position: absolute;
+    width: 70%;
+    aspect-ratio: 1;
+    border-radius: 100%;
+    background-color: var(--full-modal-bkg-color);
+}
+#timer-pie {
+    z-index: 70;
+    width: 140px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    position: absolute;
+    transition: 200ms ease;
+    background: conic-gradient(var(--timer-fill-color) 90%, #0000 0);
 }
 #time-left {
-    z-index: 50;
+    z-index: 1000;
 }
 #stats-share {
     display: flex;
