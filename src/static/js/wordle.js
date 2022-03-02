@@ -227,9 +227,9 @@
     const mode = window.localStorage.getItem('mode') || 'en'
     let word
     try {
-        word = await fetch('/get_word?mode=' + mode).then(res => res.json()); // fetch word for the specific language
+        word = await fetch('/get_word?mode=' + mode).then(res => res.json()); // fetch word for the specific mode
     } catch (e) {
-        window.localStorage.setItem('mode', 'en') // if there's an error in fetching the word from the selected mode, set the language to english
+        window.localStorage.setItem('mode', 'en') // if there's an error in fetching the word from the selected mode, set the mode to english
         return window.location.reload()
     }
 
@@ -381,7 +381,7 @@
                     }
                 }
                 // check if the word exists
-                const valid = await fetch(`/validate_word?lang=${mode}&word=${currentLetters}`).then(res => res.json());
+                const valid = await fetch(`/validate_word?mode=${mode}&word=${currentLetters}`).then(res => res.json());
                 if (!valid) {
                     displayMsg('Invalid word', 2000, 'var(--full-modal-bkg-color)')
                     return shakeRow(gameRow)
@@ -438,14 +438,14 @@
                         })
 
                         setTimeout(() => { // get random message from the map
-                            const randomMsg = MESSAGES.get(mode)[rowIndex][(Math.round(Math.random() * (MESSAGES.get('en')[rowIndex].length - 1)))]
+                            const setGrp = MESSAGES.get(mode) ? MESSAGES.get(mode) : MESSAGES.get('en')
+                            const randomMsg = setGrp[rowIndex][(Math.round(Math.random() * (MESSAGES.get('en')[rowIndex].length - 1)))]
                             displayMsg(randomMsg, 10000, 'var(--full-modal-bkg-color)')
                             setTimeout(() => {
                                 openStats()
                             }, 2000);
                         }, 500 + (eval.length * 200))
                         return
-                        // TODO: after the tiles bounce, display statistics from localstorage and update statistics with the win or lose
                     }
                     // LOSE
                     if (boardState.rowIndex === 6) {
