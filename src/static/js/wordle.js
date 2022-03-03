@@ -39,12 +39,23 @@
         }, 600);
     }
 
+
+    const helpModal = document.getElementById('help-modal')
+    const settingsModal = document.getElementById('settings-modal')
+    const statsModal = document.getElementById('stats-modal')
+
     function openStats() {
+        if (helpModal.style.display === 'flex' ||
+            settingsModal.style.display === 'flex' ||
+            statsModal.style.display === 'flex') return
         const statsBtn = document.getElementById('stats')
         statsBtn.dispatchEvent(new MouseEvent('click'));
     }
 
     function openHelp() {
+        if (helpModal.style.display === 'flex' ||
+            settingsModal.style.display === 'flex' ||
+            statsModal.style.display === 'flex') return
         const helpBtn = document.getElementById('help')
         helpBtn.dispatchEvent(new MouseEvent('click'));
     }
@@ -153,6 +164,7 @@
     }
 
     const shareButton = document.getElementById('stats-share')
+
     function getBoardText(boardState) {
         let text = ''
         if (boardState.state === 'LOSE') { // header

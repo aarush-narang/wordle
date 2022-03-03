@@ -109,13 +109,6 @@
             closeModal(statsModal)
         })
     })
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            closeModal(helpModal)
-            closeModal(settingsModal)
-            closeModal(statsModal)
-        }
-    })
 
     const modeSelect = document.getElementById('modes-select')
     modeSelect.value = window.localStorage.getItem('mode') || 'english' // preload the mode
