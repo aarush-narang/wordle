@@ -1,12 +1,12 @@
 (async () => {
-    const MESSAGES = new Map().set('en', [
+    const MESSAGES = new Map().set('english', [
         ['Unbelieveable!', 'Incredible!'],
         ['Spectacular!', 'Amazing!'],
         ['Impressive!', 'Remarkable!'],
         ['Great Job!', 'Cool!'],
         ['Nice!', 'Great!'],
         ['Phew!', 'Close one!']
-    ]).set('es', [
+    ]).set('spanish', [
         ['¡Increíble!', '¡Impresionante!'],
         ['¡Espectacular', '¡Magnífico!', '¡Asombroso!'],
         ['¡Extraordinario!', '¡Impresionante!'],
@@ -162,9 +162,9 @@
         }
 
         const evals = boardState.evaluations
-        console.log(evals)
+
         evals.forEach((rowEval) => {
-            if(rowEval === null) return
+            if (rowEval === null) return
             rowEval.forEach((eval) => {
                 if (eval === 'correct') text += '🟩'
                 else if (eval === 'present') text += '🟨'
@@ -174,14 +174,14 @@
         })
         return text
     }
+
     function updateShareButton(boardState) {
         shareButton.style.display = 'flex'
         shareButton.addEventListener('click', event => {
             event.preventDefault()
-            if(!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) { // if not mobile
+            if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) { // if not mobile
                 navigator.clipboard.writeText(getBoardText(boardState)) // copy the wordle game state to clipboard
-            }
-            else if (navigator.share) { // if mobile and share API is supported
+            } else if (navigator.share) { // if mobile and share API is supported
                 navigator.share({
                         text: getBoardText(boardState), // wordle game state
                     })
@@ -223,52 +223,48 @@
         if (currentRowIndex || currentRowIndex === 0) graphBars[currentRowIndex].classList.add('highlight')
     }
 
-    /* Wordle Game */
-    const mode = window.localStorage.getItem('mode') || 'en'
-    let word
-    try {
-        word = await fetch('/get_word?mode=' + mode).then(res => res.json()); // fetch word for the specific mode
-    } catch (e) {
-        window.localStorage.setItem('mode', 'en') // if there's an error in fetching the word from the selected mode, set the mode to english
-        return window.location.reload()
-    }
-
-    const gameRows = document.querySelectorAll('game-row')
-
-    if (!window.localStorage.getItem(mode + '_boardState')) { // if there is no board state, create a new board
+    function resetBoardState(w) {
         window.localStorage.setItem(mode + '_boardState', JSON.stringify({
             "boardState": ["", "", "", "", "", ""],
             "evaluations": [null, null, null, null, null, null],
             "rowIndex": 0,
             "hardMode": false,
-            "nextWordTS": word.nextWordTS,
+            "nextWordTS": w.nextWordTS,
             'state': 'IN_PROGRESS'
         }))
     }
+
+
+    /* Wordle Game */
+    const mode = window.localStorage.getItem('mode') || 'english'
+    const gameRows = document.querySelectorAll('game-row')
+
+    let word
+    try {
+        word = await fetch('/get_word?mode=' + mode).then(res => res.json()); // fetch word for the specific mode
+    } catch (e) {
+        window.localStorage.setItem('mode', 'english') // if there's an error in fetching the word from the selected mode, set the mode to english
+        return window.location.reload()
+    }
+
+    if (!window.localStorage.getItem(mode + '_boardState')) resetBoardState(word) // if there is no board state, create a new board
     let boardState = JSON.parse(window.localStorage.getItem(mode + '_boardState')) // get the board state
 
     // check if it is a new day using the nextWordTS in localstorage
     if (boardState.nextWordTS !== word.nextWordTS) {
         // reset board state if it is not equal to the nextWordTS that was just fetched
-        window.localStorage.setItem(mode + '_boardState', JSON.stringify({
-            "boardState": ["", "", "", "", "", ""],
-            "evaluations": [null, null, null, null, null, null],
-            "rowIndex": 0,
-            "hardMode": false,
-            "nextWordTS": word.nextWordTS,
-            'state': 'IN_PROGRESS'
-        }))
+        resetBoardState(word)
         return window.location.reload()
     }
 
-    // sharing
-    if(boardState.state !== 'IN_PROGRESS') {
-        updateShareButton(boardState)
-    } else {
-        shareButton.style.display = 'none'
-    }
 
-    if (!window.localStorage.getItem(mode + '_stats')) { // if there is no stats, create a new one
+    /* SHARE BUTTON */
+    if (boardState.state !== 'IN_PROGRESS') updateShareButton(boardState)
+
+
+    /* STATS */
+    // if there is no stats, create a new one
+    if (!window.localStorage.getItem(mode + '_stats')) {
         window.localStorage.setItem(mode + '_stats', JSON.stringify({
             "gamesPlayed": 0,
             "currentStreak": 0,
@@ -297,13 +293,6 @@
         updateStats(stats, boardState.rowIndex - 1) // -1 because the rowIndex is incremented after the row is finished
     }
 
-    const keyboard = document.getElementById('keyboard')
-    const keys = keyboard.querySelectorAll('button')
-    let markedLetters = getMarkedLetters(boardState)
-    let hardModeLetters = markedLetters.correct.concat(markedLetters.present)
-
-    updateKeyboard() // update the keyboard colors
-
     if (boardState.state !== 'IN_PROGRESS') {
         setTimeout(() => {
             openStats() // open the stats
@@ -314,6 +303,17 @@
         }, 200);
     }
 
+
+    /* KEYBOARD */
+    const keyboard = document.getElementById('keyboard')
+    const keys = keyboard.querySelectorAll('button')
+    let markedLetters = getMarkedLetters(boardState)
+    let hardModeLetters = markedLetters.correct.concat(markedLetters.present)
+
+    updateKeyboard() // update the keyboard colors
+
+
+    /* LOADING PREVIOUS STATE */
     // load the board state into the game using the words stored and the evaluations
     boardState.boardState.forEach((word, i) => {
         if (word === '') return
@@ -332,6 +332,8 @@
         })
     })
 
+
+    /* START LISTENING TO KEYBOARD */
     document.addEventListener('keydown', async (event) => {
         boardState = JSON.parse(window.localStorage.getItem(mode + '_boardState')) // on every keypress, get the board state to make sure it is not stale data
         if (boardState.state === 'WIN') return displayMsg('You Won! The word was ' + word.word, 1000000, 'var(--full-modal-bkg-color)')
@@ -340,7 +342,6 @@
         if ((event.key.length > 1 || !/^([A-Z]|\á|\é|\í|\ó|\ú|\ñ)$/i.test(event.key)) && event.key !== 'Backspace' && event.key !== 'Enter') return // check if input is valid
 
         markedLetters = getMarkedLetters(boardState)
-        hardModeLetters = markedLetters.correct.concat(markedLetters.present)
 
         const rowIndex = boardState.rowIndex // get the word row they are on
         const gameRow = gameRows[rowIndex] // and get the row element from the index
@@ -369,6 +370,7 @@
             } else {
                 // hard mode checks
                 if (boardState.hardMode) {
+                    hardModeLetters = markedLetters.correct.concat(markedLetters.present)
                     let pass = [true, null]
                     hardModeLetters.forEach((letter, i, arr) => {
                         if (!currentLetters.split('').includes(letter)) {
@@ -419,7 +421,7 @@
                         stats.guesses[rowIndex + 1] += 1 // no -1 here because the var has not been incremented yet, +1 because the guesses obj is 1-based
                         stats.maxStreak = Math.max(stats.maxStreak, stats.currentStreak)
 
-                        stats.totalCorrect += markedLetters.correct_dup.length - (5 * stats.gamesPlayed) // subtract to remove the last word
+                        stats.totalCorrect += markedLetters.correct_dup.length - 5 // subtract to remove the last word
                         stats.totalPresent += markedLetters.present_dup.length
                         stats.totalAbsent += markedLetters.absent_dup.length
                         stats.wordsGuessed += rowIndex
@@ -438,8 +440,8 @@
                         })
 
                         setTimeout(() => { // get random message from the map
-                            const setGrp = MESSAGES.get(mode) ? MESSAGES.get(mode) : MESSAGES.get('en')
-                            const randomMsg = setGrp[rowIndex][(Math.round(Math.random() * (MESSAGES.get('en')[rowIndex].length - 1)))]
+                            const setGrp = MESSAGES.get(mode) ? MESSAGES.get(mode) : MESSAGES.get('english')
+                            const randomMsg = setGrp[rowIndex][(Math.round(Math.random() * (MESSAGES.get('english')[rowIndex].length - 1)))]
                             displayMsg(randomMsg, 10000, 'var(--full-modal-bkg-color)')
                             setTimeout(() => {
                                 openStats()
@@ -465,7 +467,6 @@
 
                         updateStats(stats, null)
                         updateShareButton(boardState)
-                        openStats()
 
                         setTimeout(() => {
                             displayMsg('You Lost :(, the word was ' + word.word, 1000000, 'var(--full-modal-bkg-color)')

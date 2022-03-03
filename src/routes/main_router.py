@@ -9,8 +9,8 @@ main_router = Blueprint(__name__, 'routes')
 
 # Constants
 SUPPORTED_MODES = [
-    'en',
-    'es',
+    'english',
+    'spanish',
     'foods',
 ]
 CURDIR = os.path.dirname(os.path.abspath(__file__))
@@ -21,7 +21,7 @@ def getNextMidnightTimestamp():
     return (datetime.now() + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0).timestamp()
 
 def getRandomWord(mode):
-    with open(WORDSDIR + f'\\{mode}\\words_{mode}.txt', 'r') as f: # get random word
+    with open(WORDSDIR + f'\\{mode}\\words.txt', 'r') as f: # get random word
         return random.choice(list(f)).strip()
 
 def updateWordAndTS(word, mode, info):
@@ -87,7 +87,7 @@ def check_word():
         <h3 style="font-weight: normal">Mode not supported</h3>
         ''', 400
     else:
-        with open(WORDSDIR + f'\\{mode}\\words_{mode}.txt', 'r') as f:
+        with open(WORDSDIR + f'\\{mode}\\words.txt', 'r') as f:
             if re.search(rf'{word}\n?', f.read(), re.IGNORECASE):
                 return jsonify(True)
             else:

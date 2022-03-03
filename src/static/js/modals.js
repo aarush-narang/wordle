@@ -118,9 +118,12 @@
     })
 
     const modeSelect = document.getElementById('modes-select')
-    modeSelect.value = window.localStorage.getItem('mode') || 'en' // preload the mode
+    modeSelect.value = window.localStorage.getItem('mode') || 'english' // preload the mode
+    const titleMode = document.getElementById('title-mode') // preload the mode in the title
+    titleMode.innerText = modeSelect.value
 
     modeSelect.addEventListener('change', () => {
+        titleMode.innerText = modeSelect.value
         let lclstorageMode = window.localStorage.getItem('mode')
         if (lclstorageMode !== modeSelect.value) {
             window.localStorage.setItem('mode', modeSelect.value)

@@ -409,7 +409,7 @@ if width is small enough, push info into a column */
     z-index: 1000;
 }
 #stats-share {
-    display: flex;
+    display: none;
     flex-direction: column;
     align-items: center;
     justify-content: center;

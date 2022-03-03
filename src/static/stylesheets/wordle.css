@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap');
 body {
     background-color: var(--primary-color);
     color: var(--font-color);
@@ -24,14 +25,25 @@ header div {
     margin: 0 5px;
 }
 
-#title {
-    font-family: Urbanist;
-    font-size: 28px;
-    font-weight: bold;
+#title-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     color: var(--font-color);
     transition: 150ms ease-in;
     margin-left: 40px;
 }
+#title {
+    font-family: Urbanist;
+    font-size: 28px;
+    font-weight: bold;
+}
+#title-mode {
+    font-family: Dancing Script;
+    font-size: 28px;
+}
+
+
 @media screen and (max-width: 300px) {
     header {
         flex-direction: column;

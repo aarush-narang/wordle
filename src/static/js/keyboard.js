@@ -19,4 +19,19 @@
             }));
         }
     })
+
+    // If the user presses a key on their keyboard, instead of the on-screen keyboard, still animate the key
+    document.addEventListener('keydown', (e) => {
+        const key = e.key
+
+        const keyBtn = keyboard.querySelector(`button[data-key="${key}"]`)
+        if (!keyBtn) return
+        keyBtn.setAttribute('data-active', 'true')
+        const keyUp = document.addEventListener('keyup', (e) => {
+            if (key === e.key) {
+                keyBtn.removeAttribute('data-active')
+                document.removeEventListener('keyup', keyUp)
+            }
+        })
+    })
 })()

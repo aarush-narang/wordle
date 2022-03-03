@@ -45,6 +45,11 @@
 
     transition: 150ms ease;
 }
+#keyboard button[data-active='true'] {
+    opacity: 0.8;
+    transform: scale(0.93);
+}
+
 #keyboard button:hover {
     opacity: 0.8;
     transform: scale(0.98);
