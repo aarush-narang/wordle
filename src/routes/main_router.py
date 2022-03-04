@@ -1,6 +1,6 @@
 __name__ = 'main' # have to change the name for some reason otherwise it wont import
 
-from flask import Blueprint, jsonify, render_template, request
+from flask import Blueprint, jsonify, render_template, request, make_response
 import os, json, random, re
 from datetime import datetime, timedelta
 
@@ -45,7 +45,10 @@ def getWordleWord(mode):
 
             return word # pick random word because the next word is due and update next TS as well
 
-        return info[f'{mode}_word'], info[f'{mode}_nextWordTS']
+        return {
+            'word': info[f'{mode}_word'],
+            'nextWordTS': info[f'{mode}_nextWordTS']
+        }
 
 # Routing
 @main_router.route('/')
@@ -56,39 +59,26 @@ def home():
 def get_word():
     mode = request.args.get('mode')
     if not mode:
-        return '''
-        <h1>Bad Request</h1>
-        <h3 style="font-weight: normal">Mode not specified</h3>
-        ''', 400
+        return make_response(404)
     elif mode not in SUPPORTED_MODES:
-        return '''
-        <h1>Bad Request</h1>
-        <h3 style="font-weight: normal">Mode not supported</h3>
-        ''', 400 # bad request code?
+        return make_response(404)
     else:
-        (word, nextWordTS, *args) = getWordleWord(mode)
-        return jsonify({
-            'word': word,
-            'nextWordTS': nextWordTS
-        })
+        word_dict = getWordleWord(mode)
+        with open(CURDIR + '\\wordle.word.log', 'a') as f: # logging info
+            f.write(f'CURRENT TS: {datetime.now()} - MODE: {mode} - WORD: {word_dict["word"]} - NEXT TS: {word_dict["nextWordTS"]}\n')
+        return jsonify(word_dict)
 
 @main_router.route('/validate_word')
 def check_word():
     word = request.args.get('word')
     mode = request.args.get('mode')
     if not word or not mode:
-        return '''
-        <h1>Bad Request</h1>
-        <h3 style="font-weight: normal">Word or Mode not specified</h3>
-        ''', 400
+        return make_response(404)
     elif mode not in SUPPORTED_MODES:
-        return '''
-        <h1>Bad Request</h1>
-        <h3 style="font-weight: normal">Mode not supported</h3>
-        ''', 400
+        return make_response(404)
     else:
         with open(WORDSDIR + f'\\{mode}\\words.txt', 'r') as f:
-            if re.search(rf'{word}\n?', f.read(), re.IGNORECASE):
+            if re.search(rf'{word}\n?', f.read(), re.IGNORECASE): # search for word in file
                 return jsonify(True)
             else:
                 return jsonify(False)

@@ -21,7 +21,7 @@
     })
 
     // If the user presses a key on their keyboard, instead of the on-screen keyboard, still animate the key
-    document.addEventListener('keydown', (e) => {
+    document.addEventListener('keypress', (e) => {
         const key = e.key
 
         const keyBtn = keyboard.querySelector(`button[data-key="${key}"]`)

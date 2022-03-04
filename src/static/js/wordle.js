@@ -165,12 +165,14 @@
 
     const shareButton = document.getElementById('stats-share')
 
-    function getBoardText(boardState) {
+    function getBoardText(boardState, mode) {
+        mode = mode.charAt(0).toUpperCase() + mode.slice(1)
+
         let text = ''
         if (boardState.state === 'LOSE') { // header
-            text += 'Wordle X/6\n\n'
+            text += `Wordle: ${mode} - X/6\n\n`
         } else {
-            text += `Wordle ${boardState.rowIndex}/${6}\n\n`
+            text += `Wordle: ${mode} - ${boardState.rowIndex}/${6}\n\n`
         }
 
         const evals = boardState.evaluations
@@ -187,19 +189,19 @@
         return text
     }
 
-    function updateShareButton(boardState) {
+    function updateShareButton(boardState, mode) {
         shareButton.style.display = 'flex'
         shareButton.addEventListener('click', event => {
             event.preventDefault()
             if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) { // if not mobile
-                navigator.clipboard.writeText(getBoardText(boardState)) // copy the wordle game state to clipboard
+                navigator.clipboard.writeText(getBoardText(boardState, mode)) // copy the wordle game state to clipboard
             } else if (navigator.share) { // if mobile and share API is supported
                 navigator.share({
-                        text: getBoardText(boardState), // wordle game state
+                        text: getBoardText(boardState, mode), // wordle game state
                     })
                     .catch(console.error);
             } else {
-                navigator.clipboard.writeText(getBoardText(boardState)) // copy the wordle game state to clipboard
+                navigator.clipboard.writeText(getBoardText(boardState, mode)) // copy the wordle game state to clipboard
             }
         });
     }
@@ -271,7 +273,7 @@
 
 
     /* SHARE BUTTON */
-    if (boardState.state !== 'IN_PROGRESS') updateShareButton(boardState)
+    if (boardState.state !== 'IN_PROGRESS') updateShareButton(boardState, mode)
 
 
     /* STATS */
@@ -441,7 +443,7 @@
                         window.localStorage.setItem(mode + '_stats', JSON.stringify(stats))
 
                         updateStats(stats, rowIndex)
-                        updateShareButton(boardState)
+                        updateShareButton(boardState, mode)
 
                         // update the tiles and animate them
                         eval.forEach((evaluation, i) => {
@@ -478,7 +480,7 @@
                         window.localStorage.setItem(mode + '_stats', JSON.stringify(stats))
 
                         updateStats(stats, null)
-                        updateShareButton(boardState)
+                        updateShareButton(boardState, mode)
 
                         setTimeout(() => {
                             displayMsg('You Lost :(, the word was ' + word.word, 1000000, 'var(--full-modal-bkg-color)')

@@ -406,7 +406,7 @@ if width is small enough, push info into a column */
     background: conic-gradient(var(--timer-fill-color) 90%, #0000 0);
 }
 #time-left {
-    z-index: 1000;
+    z-index: 100;
 }
 #stats-share {
     display: none;
