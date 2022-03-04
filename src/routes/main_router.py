@@ -64,7 +64,7 @@ def get_word():
         return make_response(404)
     else:
         word_dict = getWordleWord(mode)
-        with open(CURDIR + '\\wordle.word.log', 'a') as f: # logging info
+        with open(CURDIR + '\\wordle.log', 'a') as f: # logging info
             f.write(f'CURRENT TS: {datetime.now()} - MODE: {mode} - WORD: {word_dict["word"]} - NEXT TS: {word_dict["nextWordTS"]}\n')
         return jsonify(word_dict)
 

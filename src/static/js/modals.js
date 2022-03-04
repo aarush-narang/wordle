@@ -169,6 +169,7 @@
     const nextWordTS = new Date().setHours(0, 0, 0, 0) + (24 * 60 * 60 * 1000)
     updateTime(nextWordTS, timeText)
     setInterval(() => {
+        if (!statsModal.classList.contains('open')) return // stop updating if the modal is closed, to avoid using up resources
         updateTime(nextWordTS, timeText)
     }, 100);
 

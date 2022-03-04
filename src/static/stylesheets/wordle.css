@@ -44,7 +44,7 @@ header div {
 }
 
 
-@media screen and (max-width: 300px) {
+@media screen and (max-width: 350px) {
     header {
         flex-direction: column;
         justify-content: center;
@@ -52,7 +52,11 @@ header div {
 
         min-width: 140px;
         padding: 0 5px;
-        height: 150px;
+        height: 200px;
+    }
+    #title-container {
+        flex-direction: column;
+        margin: 0;
     }
     #title {
         margin-left: 10px;
@@ -114,4 +118,11 @@ header div {
     margin: 20px 0 15px 0;
     padding: 10px;
     z-index: 1000000;
+}
+#msg a {
+    margin-left: 5px;
+    color: var(--font-color);
+}
+#msg a:visited {
+    color: var(--visited-font-color);
 }

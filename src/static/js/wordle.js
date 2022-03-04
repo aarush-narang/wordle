@@ -193,15 +193,32 @@
         shareButton.style.display = 'flex'
         shareButton.addEventListener('click', event => {
             event.preventDefault()
-            if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) { // if not mobile
+            if (shareButton.getAttribute('data-clicked')) return // prevent spamming
+
+            if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) { // if desktop (not mobile)
+                shareButton.setAttribute('data-clicked', 'true')
+                shareButton.innerText = 'Copied!'
+                setTimeout(() => {
+                    shareButton.innerText = 'Share'
+                    shareButton.removeAttribute('data-clicked')
+                }, 3000);
                 navigator.clipboard.writeText(getBoardText(boardState, mode)) // copy the wordle game state to clipboard
-            } else if (navigator.share) { // if mobile and share API is supported
-                navigator.share({
-                        text: getBoardText(boardState, mode), // wordle game state
-                    })
-                    .catch(console.error);
             } else {
-                navigator.clipboard.writeText(getBoardText(boardState, mode)) // copy the wordle game state to clipboard
+                shareButton.setAttribute('data-clicked', 'true')
+                shareButton.innerText = 'Shared!'
+                setTimeout(() => {
+                    shareButton.innerText = 'Share'
+                    shareButton.removeAttribute('data-clicked')
+                }, 3000);
+
+                if (navigator.share) { // if mobile and share API is supported
+                    navigator.share({
+                            text: getBoardText(boardState, mode), // wordle game state
+                        })
+                        .catch(console.error);
+                } else {
+                    navigator.clipboard.writeText(getBoardText(boardState, mode)) // copy the wordle game state to clipboard
+                }
             }
         });
     }
@@ -214,6 +231,7 @@
     const avgCorerct = document.getElementById('avg-correct')
     const avgPresent = document.getElementById('avg-present')
     const avgAbsent = document.getElementById('avg-absent')
+    const totalWordsGuessed = document.getElementById('words-guessed')
 
     // dist
     const graphBars = document.querySelectorAll('.graph-bar')
@@ -227,6 +245,7 @@
         avgCorerct.innerText = statistics.wordsGuessed !== 0 ? (statistics.totalCorrect / statistics.wordsGuessed).toPrecision(2) : 'N/A'
         avgPresent.innerText = statistics.wordsGuessed !== 0 ? (statistics.totalPresent / statistics.wordsGuessed).toPrecision(2) : 'N/A'
         avgAbsent.innerText = statistics.wordsGuessed !== 0 ? (statistics.totalAbsent / statistics.wordsGuessed).toPrecision(2) : 'N/A'
+        totalWordsGuessed.innerText = statistics.wordsGuessed
 
         const totalGuesses = Object.values(statistics.guesses).reduce((a, b) => a + b)
         graphBars.forEach((bar, i) => {
@@ -350,8 +369,8 @@
     /* START LISTENING TO KEYBOARD */
     document.addEventListener('keydown', async (event) => {
         boardState = JSON.parse(window.localStorage.getItem(mode + '_boardState')) // on every keypress, get the board state to make sure it is not stale data
-        if (boardState.state === 'WIN') return displayMsg('You Won! The word was ' + word.word, 1000000, 'var(--full-modal-bkg-color)')
-        else if (boardState.state === 'LOSE') return displayMsg('You Lost :(, The word was ' + word.word, 1000000, 'var(--full-modal-bkg-color)')
+        if (boardState.state === 'WIN') return displayMsg(`You Won! The word was <a href="https://www.dictionary.com/browse/${word.word}">${word.word}</a>`, 1000000, 'var(--full-modal-bkg-color)')
+        else if (boardState.state === 'LOSE') return displayMsg(`You Lost :(, the word was <a href="https://www.dictionary.com/browse/${word.word}">${word.word}</a>` + word.word, 1000000, 'var(--full-modal-bkg-color)')
 
         if ((event.key.length > 1 || !/^([A-Z]|\á|\é|\í|\ó|\ú|\ñ)$/i.test(event.key)) && event.key !== 'Backspace' && event.key !== 'Enter') return // check if input is valid
 
@@ -483,7 +502,7 @@
                         updateShareButton(boardState, mode)
 
                         setTimeout(() => {
-                            displayMsg('You Lost :(, the word was ' + word.word, 1000000, 'var(--full-modal-bkg-color)')
+                            displayMsg(`You Lost :(, the word was <a href="https://www.dictionary.com/browse/${word.word}">${word.word}</a>`, 1000000, 'var(--full-modal-bkg-color)')
                             setTimeout(() => {
                                 openStats()
                             }, 2000);
