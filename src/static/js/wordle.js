@@ -164,6 +164,7 @@
     }
 
     const shareButton = document.getElementById('stats-share')
+    const stats_other = document.getElementById('stats-other')
 
     function getBoardText(boardState, mode) {
         mode = mode.charAt(0).toUpperCase() + mode.slice(1)
@@ -190,10 +191,12 @@
     }
 
     function updateShareButton(boardState, mode) {
-        shareButton.style.display = 'flex'
+        stats_other.setAttribute('data-btn-visible', 'true')
+
         shareButton.addEventListener('click', event => {
             event.preventDefault()
             if (shareButton.getAttribute('data-clicked')) return // prevent spamming
+            if (boardState.state === 'IN_PROGRESS') return
 
             if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) { // if desktop (not mobile)
                 shareButton.setAttribute('data-clicked', 'true')
@@ -250,7 +253,7 @@
         const totalGuesses = Object.values(statistics.guesses).reduce((a, b) => a + b)
         graphBars.forEach((bar, i) => {
             const width = (statistics.guesses[i + 1] / totalGuesses) * 100
-            bar.style.width = `${width === 0 ? 7 : width <= 7 ? 12 : width}%`
+            bar.style.width = `${width === 0 ? 1 : width}%`
             graphNums[i].innerText = statistics.guesses[i + 1]
         })
         if (currentRowIndex || currentRowIndex === 0) graphBars[currentRowIndex].classList.add('highlight')
@@ -368,6 +371,7 @@
 
     /* START LISTENING TO KEYBOARD */
     document.addEventListener('keydown', async (event) => {
+        if (event.altKey || event.ctrlKey || event.metaKey) return
         boardState = JSON.parse(window.localStorage.getItem(mode + '_boardState')) // on every keypress, get the board state to make sure it is not stale data
         if (boardState.state === 'WIN') return displayMsg(`You Won! The word was <a href="https://www.dictionary.com/browse/${word.word}">${word.word}</a>`, 1000000, 'var(--full-modal-bkg-color)')
         else if (boardState.state === 'LOSE') return displayMsg(`You Lost :(, the word was <a href="https://www.dictionary.com/browse/${word.word}">${word.word}</a>` + word.word, 1000000, 'var(--full-modal-bkg-color)')
