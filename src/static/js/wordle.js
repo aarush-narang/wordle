@@ -270,7 +270,6 @@
         }))
     }
 
-
     /* Wordle Game */
     const mode = window.localStorage.getItem('mode') || 'english'
     const gameRows = document.querySelectorAll('game-row')
@@ -373,8 +372,8 @@
     document.addEventListener('keydown', async (event) => {
         if (event.altKey || event.ctrlKey || event.metaKey) return
         boardState = JSON.parse(window.localStorage.getItem(mode + '_boardState')) // on every keypress, get the board state to make sure it is not stale data
-        if (boardState.state === 'WIN') return displayMsg(`You Won! The word was <a href="https://www.dictionary.com/browse/${word.word}">${word.word}</a>`, 1000000, 'var(--full-modal-bkg-color)')
-        else if (boardState.state === 'LOSE') return displayMsg(`You Lost :(, the word was <a href="https://www.dictionary.com/browse/${word.word}">${word.word}</a>` + word.word, 1000000, 'var(--full-modal-bkg-color)')
+        if (boardState.state === 'WIN') return displayMsg(`You Won! The word was <a href="https://www.thefreedictionary.com/${word.word}">${word.word}</a>`, 1000000, 'var(--full-modal-bkg-color)')
+        else if (boardState.state === 'LOSE') return displayMsg(`You Lost :(, the word was <a href="https://www.thefreedictionary.com/${word.word}">${word.word}</a>` + word.word, 1000000, 'var(--full-modal-bkg-color)')
 
         if ((event.key.length > 1 || !/^([A-Z]|\á|\é|\í|\ó|\ú|\ñ)$/i.test(event.key)) && event.key !== 'Backspace' && event.key !== 'Enter') return // check if input is valid
 
@@ -506,7 +505,7 @@
                         updateShareButton(boardState, mode)
 
                         setTimeout(() => {
-                            displayMsg(`You Lost :(, the word was <a href="https://www.dictionary.com/browse/${word.word}">${word.word}</a>`, 1000000, 'var(--full-modal-bkg-color)')
+                            displayMsg(`You Lost :(, the word was <a href="https://www.thefreedictionary.com/${word.word}">${word.word}</a>`, 1000000, 'var(--full-modal-bkg-color)')
                             setTimeout(() => {
                                 openStats()
                             }, 2000);

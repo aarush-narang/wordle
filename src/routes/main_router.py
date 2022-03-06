@@ -33,17 +33,11 @@ def updateWordAndTS(word, mode, info):
 def getWordleWord(mode):
     with open(CURDIR + '\\wordle.info.json', 'r') as f:
         info:dict = json.load(f)
-    
-        if len(info) != len(SUPPORTED_MODES)*2 and (info.get(f'{mode}_word') == '' or not info.get(f'{mode}_word')):
+        
+        # if the word is empty or the next word timestamp is in the past, get a new word
+        if (len(info) != len(SUPPORTED_MODES)*2 and (info.get(f'{mode}_word') == '' or not info.get(f'{mode}_word'))) or int(info[f'{mode}_nextWordTS']) < datetime.now().timestamp():
             word = getRandomWord(mode)
             updateWordAndTS(word, mode, info)
-
-            return word # pick random word because there is no word and update json file (word, ts) as well
-        elif int(info[f'{mode}_nextWordTS']) < datetime.now().timestamp():
-            word = getRandomWord(mode) # pick random word because the next word is due
-            updateWordAndTS(word, mode, info)
-
-            return word # pick random word because the next word is due and update next TS as well
 
         return {
             'word': info[f'{mode}_word'],
