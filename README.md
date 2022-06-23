@@ -7,7 +7,12 @@ Created using Flask and VanillaJS, this clone includes not only english words bu
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install the following dependencies
 
 - flask
-- flask_wtf
+
+Additionally, create a .env file in the root directory with the following variables
+- DOMAIN
+    - your local IP address.
+- PORT
+    - the port you want to use.
 
 Then, change your directory to the `/wordle/src` directory. To start, type
 
