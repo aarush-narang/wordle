@@ -42,7 +42,7 @@ def getWordleWord(mode):
         }
 
 # Routing
-@app.route('/app.py')
+@app.route('/')
 def home():
     return render_template('home.html')
 
@@ -73,6 +73,10 @@ def check_word():
                 return jsonify(True)
             else:
                 return jsonify(False)
+
+@app.route('/static/<path:path>')
+def send_static(path):
+    return send_static(path=path)
 
 if __name__ == '__main__':
     app.run()
