@@ -42,7 +42,7 @@ def getWordleWord(mode):
         }
 
 # Routing
-@app.route('/app.py')
+@app.route('/')
 def home():
     return render_template('home.html')
 
