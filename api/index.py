@@ -52,6 +52,7 @@ def home():
 @app.route('/get_word')
 def get_word():
     print("GET WORD")
+    print(WORDLE_INFO)
     mode = request.args.get('mode')
     if not mode:
         return make_response(404)
@@ -59,8 +60,6 @@ def get_word():
         return make_response(404)
     else:
         word_dict = getWordleWord(mode)
-        # with open(CURDIR + '\\wordle.log', 'a') as f: # logging info
-        #     f.write(f'CURRENT TS: {datetime.now()} - MODE: {mode} - WORD: {word_dict["word"]} - NEXT TS: {word_dict["nextWordTS"]}\n')
         return jsonify(word_dict)
 
 @app.route('/validate_word')
