@@ -10,14 +10,6 @@ SUPPORTED_MODES = [
 ]
 CURDIR = os.path.dirname(os.path.abspath(__file__))
 WORDSDIR = os.path.abspath('api/static/words')
-WORDLE_INFO = {
-    'english_word': '',
-    'english_nextWordTS': 0,
-    'spanish_word': '',
-    'spanish_nextWordTS': 0,
-    'foods_word': '',
-    'foods_nextWordTS': 0
-}
 
 app = Flask(__name__)
 
@@ -29,20 +21,25 @@ def getRandomWord(mode):
     with open(f'api/static/words/{mode}/words.txt', 'r') as f: # get random word
         return random.choice(list(f)).strip()
 
-def updateWordAndTS(word, mode):
-    WORDLE_INFO[f'{mode}_word'] = word
-    WORDLE_INFO[f'{mode}_nextWordTS'] = getNextMidnightTimestamp()
+def updateWordAndTS(word, mode, info):
+    with open('api/wordle.info.json', 'w') as f:
+        info[f'{mode}_word'] = word
+        info[f'{mode}_nextWordTS'] = getNextMidnightTimestamp()
+        json.dump(info, f)
 
 def getWordleWord(mode):
-    # if the word is empty or the next word timestamp is in the past, get a new word
-    if (len(WORDLE_INFO) != len(SUPPORTED_MODES)*2 and (WORDLE_INFO.get(f'{mode}_word') == '' or not WORDLE_INFO.get(f'{mode}_word'))) or int(WORDLE_INFO[f'{mode}_nextWordTS']) < datetime.now().timestamp():
-        word = getRandomWord(mode)
-        updateWordAndTS(word, mode)
+    with open('api/wordle.info.json', 'r') as f:
+        info:dict = json.load(f)
+        
+        # if the word is empty or the next word timestamp is in the past, get a new word
+        if (len(info) != len(SUPPORTED_MODES)*2 and (info.get(f'{mode}_word') == '' or not info.get(f'{mode}_word'))) or int(info[f'{mode}_nextWordTS']) < datetime.now().timestamp():
+            word = getRandomWord(mode)
+            updateWordAndTS(word, mode, info)
 
-    return {
-        'word': WORDLE_INFO[f'{mode}_word'],
-        'nextWordTS': WORDLE_INFO[f'{mode}_nextWordTS']
-    }
+        return {
+            'word': info[f'{mode}_word'],
+            'nextWordTS': info[f'{mode}_nextWordTS']
+        }
 
 # Routing
 @app.route('/')
@@ -78,6 +75,3 @@ def check_word():
                 return jsonify(True)
             else:
                 return jsonify(False)
-
-if __name__ == '__main__':
-    app.run(debug=True)
