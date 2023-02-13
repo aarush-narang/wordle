@@ -18,17 +18,17 @@ def getNextMidnightTimestamp():
     return (datetime.now() + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0).timestamp()
 
 def getRandomWord(mode):
-    with open(WORDSDIR + f'\\{mode}\\words.txt', 'r') as f: # get random word
+    with open(f'api/static/words/{mode}/words.txt', 'r') as f: # get random word
         return random.choice(list(f)).strip()
 
 def updateWordAndTS(word, mode, info):
-    with open(CURDIR + '\\wordle.info.json', 'w') as f:
+    with open('api/wordle.info.json', 'w') as f:
         info[f'{mode}_word'] = word
         info[f'{mode}_nextWordTS'] = getNextMidnightTimestamp()
         json.dump(info, f)
 
 def getWordleWord(mode):
-    with open(CURDIR + '\\wordle.info.json', 'r') as f:
+    with open('api/wordle.info.json', 'r') as f:
         info:dict = json.load(f)
         
         # if the word is empty or the next word timestamp is in the past, get a new word
@@ -62,15 +62,15 @@ def get_word():
 
 @app.route('/validate_word')
 def check_word():
-    print("VALIDATE WORD")
     word = request.args.get('word')
     mode = request.args.get('mode')
+
     if not word or not mode:
         return make_response(404)
     elif mode not in SUPPORTED_MODES:
         return make_response(404)
     else:
-        with open(WORDSDIR + f'\\{mode}\\words.txt', 'r') as f:
+        with open(f'api/static/words/{mode}/words.txt', 'r') as f:
             if re.search(rf'{word}\n?', f.read(), re.IGNORECASE): # search for word in file
                 return jsonify(True)
             else:
