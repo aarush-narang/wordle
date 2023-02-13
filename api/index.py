@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, render_template, request, make_response
-import os, json, random, re
+import re
 from datetime import datetime, timedelta
 
 # Constants
@@ -83,6 +83,3 @@ def check_word():
                 return jsonify(True)
             else:
                 return jsonify(False)
-
-if __name__ == '__main__':
-    app.run(debug=True, port=3858)
