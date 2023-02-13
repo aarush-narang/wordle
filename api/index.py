@@ -48,6 +48,7 @@ def home():
 
 @app.route('/get_word')
 def get_word():
+    print("GET WORD")
     mode = request.args.get('mode')
     if not mode:
         return make_response(404)
@@ -61,6 +62,7 @@ def get_word():
 
 @app.route('/validate_word')
 def check_word():
+    print("VALIDATE WORD")
     word = request.args.get('word')
     mode = request.args.get('mode')
     if not word or not mode:
@@ -73,10 +75,3 @@ def check_word():
                 return jsonify(True)
             else:
                 return jsonify(False)
-
-# @app.route('/static/<path:path>')
-# def send_static(path):
-#     return send_static(path=path)
-
-if __name__ == '__main__':
-    app.run()
