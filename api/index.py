@@ -48,7 +48,6 @@ def home():
 
 @app.route('/get_word')
 def get_word():
-    print("GET WORD")
     mode = request.args.get('mode')
     if not mode:
         return make_response(404)
@@ -75,3 +74,6 @@ def check_word():
                 return jsonify(True)
             else:
                 return jsonify(False)
+
+if __name__ == '__main__':
+    app.run(debug=True)
