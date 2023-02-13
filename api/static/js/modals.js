@@ -92,7 +92,7 @@
                 }, 1);
 
                 document.onclick = (e) => { // close modal on click outside
-                    if (e.path.includes(statsModal)) return
+                    if (e.path?.includes(statsModal)) return
                     if (!e.target.id || e.target.id !== 'stats') {
                         document.onclick = null;
                         closeModal(statsModal)
