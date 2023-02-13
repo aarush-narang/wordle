@@ -35,10 +35,14 @@ def updateWordAndTS(word, mode):
 
 def getWordleWord(mode) -> dict:
     # if the word is empty or the next word timestamp is in the past, get a new word
-    if (len(WORDLE_INFO) != len(SUPPORTED_MODES)*2 and (WORDLE_INFO.get(f'{mode}_word') == '' or not WORDLE_INFO.get(f'{mode}_word'))) or int(WORDLE_INFO[f'{mode}_nextWordTS']) < datetime.now().timestamp():
+    # if (len(WORDLE_INFO) != len(SUPPORTED_MODES)*2 and (WORDLE_INFO.get(f'{mode}_word') == '' or not WORDLE_INFO.get(f'{mode}_word'))) or int(WORDLE_INFO[f'{mode}_nextWordTS']) < datetime.now().timestamp():
+    #     word = getRandomWord(mode)
+    #     updateWordAndTS(word, mode)
+
+    if int(WORDLE_INFO[f'{mode}_nextWordTS']) < datetime.now().timestamp():
         word = getRandomWord(mode)
         updateWordAndTS(word, mode)
-
+    
     return {
         'word': WORDLE_INFO[f'{mode}_word'],
         'nextWordTS': WORDLE_INFO[f'{mode}_nextWordTS']
@@ -58,7 +62,6 @@ def get_word():
         return make_response(404)
     else:
         word_dict = getWordleWord(mode)
-        word_dict["info"] = WORDLE_INFO
         return jsonify(word_dict)
 
 @app.route('/validate_word')
