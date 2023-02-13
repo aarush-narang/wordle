@@ -9,7 +9,7 @@ SUPPORTED_MODES = [
     'foods',
 ]
 CURDIR = os.path.dirname(os.path.abspath(__file__))
-WORDSDIR = os.path.abspath('static/words')
+WORDSDIR = os.path.abspath('api/static/words')
 
 app = Flask(__name__)
 
@@ -74,9 +74,9 @@ def check_word():
             else:
                 return jsonify(False)
 
-@app.route('/static/<path:path>')
-def send_static(path):
-    return send_static(path=path)
+# @app.route('/static/<path:path>')
+# def send_static(path):
+#     return send_static(path=path)
 
 if __name__ == '__main__':
     app.run()
