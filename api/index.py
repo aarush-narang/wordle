@@ -11,37 +11,41 @@ SUPPORTED_MODES = [
 
 app = Flask(__name__)
 
+WORDLE_INFO = {
+  "english_word": "amped",
+  "english_nextWordTS": 1676309665.0,
+  "spanish_word": "BORTO",
+  "spanish_nextWordTS": 0.0,
+  "foods_word": "gravy",
+  "foods_nextWordTS": 0.0
+}
+
+
 # Functions
 def getNextMidnightTimestamp():
     return (datetime.now() + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0).timestamp()
 
-def getRandomWord(mode):
+def getWord(mode):
     with open(f'api/static/words/{mode}/words.txt', 'r') as f: # get random word
-        return random.choice(list(f)).strip()
+        # get word based on the current day of the year, scale it to the number of words in the file and round it
+        word = f.read().splitlines()[round((datetime.now().timetuple().tm_yday/365)*len(f.read().splitlines()))]
+        return word
 
-def updateWordAndTS(word, mode, info):
-    with open('wordle.info.json', 'w+') as f:
-        info[f'{mode}_word'] = word
-        info[f'{mode}_nextWordTS'] = getNextMidnightTimestamp()
-        json.dump(info, f)
+def updateWordAndTS(word, mode):
+    next_word_ts = getNextMidnightTimestamp()
+    WORDLE_INFO[f'{mode}_word'] = word
+    WORDLE_INFO[f'{mode}_nextWordTS'] = next_word_ts
 
 def getWordleWord(mode):
-    if not os.path.exists('wordle.info.json'): # if the file doesn't exist, create it
-        with open('wordle.info.json', 'w+') as f:
-            json.dump({}, f)
+    # if the word is empty or the next word timestamp is in the past, get a new word
+    if (len(WORDLE_INFO) != len(SUPPORTED_MODES)*2 and (WORDLE_INFO.get(f'{mode}_word') == '' or not WORDLE_INFO.get(f'{mode}_word'))) or int(WORDLE_INFO[f'{mode}_nextWordTS']) < datetime.now().timestamp():
+        word = getWord(mode)
+        updateWordAndTS(word, mode)
 
-    with open('wordle.info.json', 'r') as f:
-        info:dict = json.load(f)
-        
-        # if the word is empty or the next word timestamp is in the past, get a new word
-        if (len(info) != len(SUPPORTED_MODES)*2 and (info.get(f'{mode}_word') == '' or not info.get(f'{mode}_word'))) or int(info[f'{mode}_nextWordTS']) < datetime.now().timestamp():
-            word = getRandomWord(mode)
-            updateWordAndTS(word, mode, info)
-
-        return {
-            'word': info[f'{mode}_word'],
-            'nextWordTS': info[f'{mode}_nextWordTS']
-        }
+    return {
+        'word': WORDLE_INFO[f'{mode}_word'],
+        'nextWordTS': WORDLE_INFO[f'{mode}_nextWordTS']
+    }
 
 # Routing
 @app.route('/')
@@ -76,4 +80,4 @@ def check_word():
                 return jsonify(False)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=3858)
