@@ -27,9 +27,14 @@ def getNextMidnightTimestamp():
 
 def getWord(mode):
     with open(f'api/static/words/{mode}/words.txt', 'r') as f: # get random word
-        # get word based on the current day of the year, scale it to the number of words in the file and round it
-        word = f.read().splitlines()[round((datetime.now().timetuple().tm_yday/365)*len(f.read().splitlines()))]
-        return word
+        # get word based on the current day of the year, so that the word is always the same for a given day
+        lines = f.read().splitlines()
+        index = int(getNextMidnightTimestamp()) % len(lines)
+        word = lines[index]
+
+        print(word)
+
+    return word
 
 def updateWordAndTS(word, mode):
     next_word_ts = getNextMidnightTimestamp()
