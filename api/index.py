@@ -9,8 +9,6 @@ SUPPORTED_MODES = [
     'foods',
 ]
 
-app = Flask(__name__)
-
 WORDLE_INFO = {
   "english_word": "amped",
   "english_nextWordTS": 1676309665.0,
@@ -19,7 +17,6 @@ WORDLE_INFO = {
   "foods_word": "gravy",
   "foods_nextWordTS": 0.0
 }
-
 
 # Functions
 def getNextMidnightTimestamp():
@@ -51,6 +48,9 @@ def getWordleWord(mode):
         'word': WORDLE_INFO[f'{mode}_word'],
         'nextWordTS': WORDLE_INFO[f'{mode}_nextWordTS']
     }
+
+# Flask App
+app = Flask(__name__)
 
 # Routing
 @app.route('/')
