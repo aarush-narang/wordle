@@ -20,13 +20,17 @@ def getRandomWord(mode):
         return random.choice(list(f)).strip()
 
 def updateWordAndTS(word, mode, info):
-    with open('api/wordle.info.json', 'w') as f:
+    with open('/tmp/wordle.info.json', 'w+') as f:
         info[f'{mode}_word'] = word
         info[f'{mode}_nextWordTS'] = getNextMidnightTimestamp()
         json.dump(info, f)
 
 def getWordleWord(mode):
-    with open('api/wordle.info.json', 'r') as f:
+    if not os.path.exists('/tmp/wordle.info.json'): # if the file doesn't exist, create it
+        with open('/tmp/wordle.info.json', 'w+') as f:
+            json.dump({}, f)
+
+    with open('/tmp/wordle.info.json', 'r') as f:
         info:dict = json.load(f)
         
         # if the word is empty or the next word timestamp is in the past, get a new word
